@@ -17,7 +17,7 @@
 <script type="text/javascript">
 	var periodicReload = setInterval(function(){
 		$.ajax({
-			url: "room-process.php",
+			url: "lobby-process.php",
 			type: "POST",
 			data: {action: "getCurrentQueue"} 
 		}).done(function(list){
@@ -30,7 +30,7 @@
 		if ($("#queue").children().length >= 4){
 			setTimeout(function(){
 				$.ajax({
-					url: "room-process.php",
+					url: "lobby-process.php",
 					type: "POST",
 					data: {action: "removeFromQueue", userid: "<?php echo $_REQUEST['userid']; ?>"} 
 				}).done(function(){
@@ -48,7 +48,7 @@
 
 	function quitQueue(){
 		$.ajax({
-			url: "room-process.php",
+			url: "lobby-process.php",
 			type: "POST",
 			data: {action: "removeFromQueue", userid: "<?php echo $_REQUEST['userid']; ?>"} 
 		});
