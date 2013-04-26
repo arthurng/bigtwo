@@ -1,5 +1,5 @@
 <?php
-  function shuffCards($cardNum,$roomid){
+	function shuffleCards($cardNum,$roomid){
 		$cardNum = (int)$cardNum;
 		$roomid = (int)$roomid;
 		
@@ -17,10 +17,10 @@
 	
 	function getHand(){
 		$cardNum = 52;
-		$roomid = (int)$_REQUEST['roomid'];
-		$playerid = (int)$_REQUEST['playerid'];		
+		$roomid = (int)$_POST['roomid'];
+		$playerid = (int)$_POST['playerid'];		
 	
-		$dock = shuffCards($cardNum,$roomid);
+		$dock = shuffleCards($cardNum,$roomid);
 		$cards = array_chunk($dock,($cardNum/4));
 		$hand = $cards[$playerid];
 		
