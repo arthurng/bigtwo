@@ -1,10 +1,26 @@
 <?php
 	function getCurrentQueue(){
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-		$q = $db -> prepare("SELECT * FROM queue");
+		$q = $db -> prepare("SELECT * FROM queue WHERE roomid = ?");
+		$q->execute(array($_REQUEST["roomid"]));
+		$r = $q->fetchAll(PDO::FETCH_CLASS);
+		return $r;
+	}
+
+	function getRoomList(){
+		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
+		$q = $db -> prepare("SELECT DISTINCT roomid FROM queue ORDER BY roomid");
 		$q->execute();
 		$r = $q->fetchAll(PDO::FETCH_CLASS);
 		return $r;
+	}
+
+	function createRoom(){
+		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
+		$q = $db -> prepare("SELECT roomid FROM queue ORDER BY roomid DESC LIMIT 1");
+		$q->execute();
+		$r = $q->fetch();
+		return $r["roomid"]+1;
 	}
 
 	function removeFromQueue(){
@@ -12,6 +28,12 @@
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 		$q = $db -> prepare("DELETE FROM queue WHERE userid = ?");
 		$q->execute(array($_REQUEST["userid"]));		
+	}
+
+	function joinRoom(){
+		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
+		$q = $db -> prepare("UPDATE queue SET roomid = ? WHERE userid = ?");
+		$q->execute(array($_REQUEST["roomid"], $_REQUEST["userid"]));		
 	}
 
 	header('Content-Type: application/json');
