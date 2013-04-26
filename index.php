@@ -26,6 +26,7 @@ window.fbAsyncInit = function() {
 		console.log("Name: "+ response.name + " ID: "+response.id);
 		var img_link = "http://graph.facebook.com/"+response.id+"/picture"
 		console.log(img_link);
+		window.location.href = "lobby.php?userid="+response.id;
 		});		
 	} else if (response.status === 'not_authorized') {
 		// not_authorized
