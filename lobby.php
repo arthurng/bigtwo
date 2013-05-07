@@ -1,6 +1,6 @@
 <?php
 	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-	$q = $db -> prepare("SELECT * FROM queue WHERE userid = ?");
+	$q = $db -> prepare("SELECT * FROM queue WHERE userid = ? AND valid = 1");
 	$q->execute(array($_REQUEST["userid"]));
 	$r = $q->fetch();
 	if (!$r) {
