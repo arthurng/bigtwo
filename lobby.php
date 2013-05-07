@@ -35,7 +35,7 @@
 			setTimeout(function(){
 				quitQueue();
 				$(window).off('beforeunload');				
-				window.location.href = "room.php";
+				window.location.href = "room.php?roomid="+currentRoom;
 			}, 2000);
 		}
 	}, 1000);
