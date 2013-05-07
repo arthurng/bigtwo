@@ -17,6 +17,15 @@ window.fbAsyncInit = function() {
 		xfbml      : true  // parse XFBML
 	});
 
+	FB.Event.subscribe('auth.login', function(response) {
+		FB.api('/me', function(response) {
+		console.log("Name: "+ response.name + " ID: "+response.id);
+		var img_link = "http://graph.facebook.com/"+response.id+"/picture"
+		console.log(img_link);
+		window.location.href = "login-process.php?userid="+response.id+"&username="+response.name;
+		});
+    });
+	
 // Additional init code here
 	FB.getLoginStatus(function(response) {
 	if (response.status === 'connected') {
@@ -26,7 +35,7 @@ window.fbAsyncInit = function() {
 		console.log("Name: "+ response.name + " ID: "+response.id);
 		var img_link = "http://graph.facebook.com/"+response.id+"/picture"
 		console.log(img_link);
-		window.location.href = "lobby.php?userid="+response.id;
+		window.location.href = "login-process.php?userid="+response.id+"&username="+response.name;
 		});		
 	} else if (response.status === 'not_authorized') {
 		// not_authorized
