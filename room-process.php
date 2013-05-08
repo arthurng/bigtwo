@@ -2,8 +2,9 @@
 	function shuffleCards($cardNum,$roomid,$gamesession){
 		$cardNum = (int)$cardNum;
 		$roomid = (int)$roomid;
-		$gamesession = (int)$gamesession+$roomid;
-		
+		$date = getdate();
+		$gamesession = (int)$gamesession+$roomid*2+$date["mday"]*3+$date["wday"]*4+$date["mon"]*5;
+
 		@mt_srand($gamesession);
 		$dock = range(1, $cardNum);
 		for($i = $cardNum-1; $i > 0; $i--){
@@ -19,25 +20,35 @@
 	function getHand(){
 		$cardNum = 52;
 		$roomid = (int)$_POST['roomid'];
-		//$playerid = (int)$_POST['playerid'];
+		$playerid = (int)$_POST['playerid'];
 		$gamesession = (int)$_POST['gamesession'];
 		// Input validation
-		//if($playerid > 3 || $playerid < 0){	throw new Exception('Invalid player');}
+		if($playerid > 3 || $playerid < 0){	throw new Exception('Invalid player');}
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		if($gamesession < 0){ throw new Exception('Invalid player');}
-		foreach($_POST['playerid'] as $playerid){
-			if($playerid > 3 || $playerid < 0){	throw new Exception('Invalid player');}
 			
-			$dock = shuffleCards($cardNum,$roomid,$gamesession);
-			$cards = array_chunk($dock,($cardNum/4));
-			$show[$playerid] = $cards[$playerid];
-		}
+		$dock = shuffleCards($cardNum,$roomid,$gamesession);
+		$cards = array_chunk($dock,($cardNum/4));
+		$hand = $cards[$playerid];
 		
-		//$hand = $cards[$playerid];
+		return $hand;
+	}
 	
-		
-		
-		return $show;
+	function resetSession(){
+		$roomid = (int)$_POST['roomid'];
+		error_reporting(0);
+		if(!isset($_COOKIE['gamesession'])){
+			$current_session = $roomid;
+		} else {
+			$current_session = $_COOKIE['gamesession'];
+		}
+		@mt_srand($current_session);				
+		$current_session = @mt_rand();
+		// Set Cookies
+		$exp = time() + 3600 * 24 * 1; // 1day
+		setcookie('gamesession', $current_session, $exp,null,null,false,true);
+
+		return $current_session;
 	}
 
 header('Content-Type: application/json');
