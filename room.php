@@ -1,3 +1,13 @@
+<?php 
+	$roomid = (int)$_REQUEST['roomid'];
+function getGamesession(){
+	global $roomid;
+	if(isset($_COOKIE['gamesession'])){
+		$gamesession = $_COOKIE['gamesession'];
+	} else {$gamesession = $roomid;}
+	return $gamesession;
+}
+?>
 <html>
 	<head>
 		<style>
@@ -33,13 +43,13 @@
 	</head>
 	<body>
 		Choose to show the player's card<br>
+		Session: <span id="gamesession"></span>
+		<button type="button" onclick="getGamesession()">Refresh</button> 
 		<form onsubmit="return showDeck();">
-			Room ID: <input class="textfield" type="number" name="roomid"><br>
-			Session: <input class="textfield" type="number" name="gamesession"><br>
-			<input type="checkbox" name="playerid[]" value="0">North<br>
-			<input type="checkbox" name="playerid[]" value="1">South<br>
-			<input type="checkbox" name="playerid[]" value="2">East<br>
-			<input type="checkbox" name="playerid[]" value="3">West<br>
+			<input type="radio" name="playerid" value="0">North<br>
+			<input type="radio" name="playerid" value="1">South<br>
+			<input type="radio" name="playerid" value="2">East<br>
+			<input type="radio" name="playerid" value="3">West<br>
 			<input type="submit" name="submit" value="Submit" />
 		</form>
 		<div id="playground">
@@ -52,29 +62,42 @@
 	
 	<script src="incl/jquery.js"></script>
 	<script>
+	var currentGamesession=<?php echo getGamesession();?>;
+	
 	function showDeck(){
 		var data = $("form").serialize();	
-		data+='&action=getHand';
+		data+="&roomid=<?php echo $roomid; ?>"+"&gamesession="+currentGamesession+'&action=getHand';
 		$.ajax({
 			url: "room-process.php",
 			type: 'POST',
 			data: data 
 		}).done(function(deck){
-			var show = eval(deck);
-			show.forEach(function(element, index, array){
-				var text=$("<div>"+element+"</div>");
-				//$("#player"+index).append(text);
-				//console.log(array);
-				var count=0;
-				array[index].forEach(function(el, ind, arr){
-					var img = $("<img class=cards id=player"+index+"card"+count+" src=cardsInNumber/"+el+".png>");
-					$("#player"+index).append(img);
-				});
-			});
-			//var t=$("<div>"+deck+"</div>");
-			//$("#playground").append(t);
+			var show = deck;
+			// Get index
+			tmp = data.split("&");
+			index = tmp[0].replace("playerid=","");
+			// Print cards
+			for(var i=0; i < show.length; i++){
+				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
+				$("#player"+index).append(img);
+			}
 		});
 		return false;
 	}
+	
+	function getGamesession(){
+		var data;
+		data="roomid=<?php echo $roomid; ?>" + '&action=resetSession';
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			data: data 
+		}).done(function(session){
+			currentGamesession = session;
+			$("#gamesession").html(currentGamesession);
+		});
+		return false;
+	}
+	$("#gamesession").html(currentGamesession);
 	</script>
 </html>
