@@ -31,6 +31,7 @@
 			
 			.cards{
 				width:100px;
+				position:relative;
 			}
 		</style>
 	</head>
@@ -72,6 +73,17 @@
 			for(var i=0; i < show.length; i++){
 				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
 				$("#player"+index).append(img);
+				$(img).click(choose=function(){
+					$(this).animate({"top": "-=50px"}, "slow", null, function(){
+						$(this).unbind('click');
+						$(this).click(function(){
+							$(this).animate({"top": "+=50px"}, "slow", null, function(){
+								$(this).unbind();
+								$(this).click(choose);
+							});
+						});
+					});
+				});
 			}
 		});
 		return false;
