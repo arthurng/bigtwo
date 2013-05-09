@@ -41,3 +41,15 @@ The rank value should be stored in a string as shown:
 | Single          | 1       |
 
 Hence, a 5-32 hand would beat a 4-52 hand.
+
+Storage of hand history
+=======================
+
+At least **four** previous hands should be stored in the database.<br />
+History of hands would allow the system to determine if the user can dealt a card freely.<br />
+note: `PASS` should be stored in case of a player forfeiting his/her change to deal a hand.
+
+database entry: `last`, `secondLast`, `thirdLast`, `forthLast`
+
+The program should include codes to push the value back a cell when a new value is written to `last`.<br />
+i.e. `last` => `secondLast`, `secondLast` => `thirdLast` and etc.
