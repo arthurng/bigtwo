@@ -33,6 +33,12 @@
 		refreshQueue();
 		if ($("#queue").children().length >= 4){
 			setTimeout(function(){
+				$.ajax({
+					url: "room-process.php",
+					type: "POST",
+					async: false,
+					data: {action: "createRoom", roomid: currentRoom} 
+				});
 				quitQueue();
 				$(window).off('beforeunload');				
 				window.location.href = "room.php?roomid="+currentRoom;
