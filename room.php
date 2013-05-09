@@ -1,12 +1,5 @@
 <?php 
 	$roomid = (int)$_REQUEST['roomid'];
-function getGamesession(){
-	global $roomid;
-	if(isset($_COOKIE['gamesession'])){
-		$gamesession = $_COOKIE['gamesession'];
-	} else {$gamesession = $roomid;}
-	return $gamesession;
-}
 ?>
 <html>
 	<head>
@@ -43,30 +36,29 @@ function getGamesession(){
 	</head>
 	<body>
 		Choose to show the player's card<br>
-		Session: <span id="gamesession"></span>
-		<button type="button" onclick="getGamesession()">Refresh</button> 
-		<form onsubmit="return showDeck();">
+		<form onsubmit="return getSeat();">
 			<input type="radio" name="playerid" value="0">North<br>
 			<input type="radio" name="playerid" value="1">South<br>
 			<input type="radio" name="playerid" value="2">East<br>
 			<input type="radio" name="playerid" value="3">West<br>
 			<input type="submit" name="submit" value="Submit" />
 		</form>
+		<button type="button" onclick="leaveSeat();">Stand up</button> 
+		<button type="button" onclick="showDeck();">Get cards</button> 
 		<div id="playground">
-			<div id="player0">Player North<br></div>
-			<div id="player1">Player South<br></div>
-			<div id="player2">Player East<br></div>
-			<div id="player3">Player West<br></div>
+			<div id="player0">Player North<span id="user0"></span><br></div>
+			<div id="player1">Player South<span id="user1"></span><br></div>
+			<div id="player2">Player East<span id="user2"></span><br></div>
+			<div id="player3">Player West<span id="user3"></span><br></div>
 		</div>
 	</body>
 	
 	<script src="incl/jquery.js"></script>
 	<script>
-	var currentGamesession=<?php echo getGamesession();?>;
+	var currentGamesession; var playerid;
 	
 	function showDeck(){
-		var data = $("form").serialize();	
-		data+="&roomid=<?php echo $roomid; ?>"+"&gamesession="+currentGamesession+'&action=getHand';
+		data="playerid="+playerid+"&roomid=<?php echo $roomid; ?>" + '&action=getHand';
 		$.ajax({
 			url: "room-process.php",
 			type: 'POST',
@@ -85,19 +77,79 @@ function getGamesession(){
 		return false;
 	}
 	
-	function getGamesession(){
+	function getSeat(){
+		leaveSeat();		
+		var data = $("form").serialize();
+		data+="&roomid=<?php echo $roomid; ?>" + '&action=getSeat';
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			async: false,
+			data: data 
+		}).done(function(playerId){
+			if(playerId == null){
+				alert('It is chosen');
+				return false;
+			}
+			playerid = playerId;
+			checkSeats();
+		});
+		return false;
+	}
+	
+	function leaveSeat(){
 		var data;
-		data="roomid=<?php echo $roomid; ?>" + '&action=resetSession';
+		data="roomid=<?php echo $roomid; ?>" + '&action=leaveSeat';
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			async: false,
+			data: data 
+		}).done(function(result){
+			checkSeats();
+			$("#player0 > img").remove();
+			$("#player1 > img").remove();
+			$("#player2 > img").remove();
+			$("#player3 > img").remove();
+		});
+		return false;
+	}
+	
+	function checkSeats(){
+		var data;
+		data="roomid=<?php echo $roomid; ?>" + '&action=checkSeats';
 		$.ajax({
 			url: "room-process.php",
 			type: 'POST',
 			data: data 
-		}).done(function(session){
-			currentGamesession = session;
-			$("#gamesession").html(currentGamesession);
+		}).done(function(result){			
+			for(i=0;i<result.length;i++){
+				$("#user"+i).html(' - '+result[i]);
+			}
 		});
 		return false;
+	}checkSeats();
+	
+	function id2player(id){
+		id = parseInt(id);
+		switch(id){
+			case 0:
+				player = 'North';
+				break;
+			case 1:
+				player = 'South';
+				break;
+			case 2:
+				player = 'East';
+				break;
+			case 3:
+				player = 'West';
+				break;
+			default:
+				player = 'Invalid';
+				break;
+		}
+		return player;
 	}
-	$("#gamesession").html(currentGamesession);
 	</script>
 </html>
