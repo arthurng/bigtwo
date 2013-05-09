@@ -41,7 +41,7 @@
 			<input type="radio" name="playerid" value="1">South<br>
 			<input type="radio" name="playerid" value="2">East<br>
 			<input type="radio" name="playerid" value="3">West<br>
-			<input type="submit" name="submit" value="Submit" />
+			<input type="submit" name="submit" value="Get seat" />
 		</form>
 		<button type="button" onclick="leaveSeat();">Stand up</button> 
 		<button type="button" onclick="showDeck();">Get cards</button> 
