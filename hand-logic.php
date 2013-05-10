@@ -24,10 +24,10 @@ function checkLogic($cards){
 
 function oneCard($cards){
 	$r = fetchLast();
-	$firstLastValue = split("-", $r["firstLast"]);
+	$prevHand = lastHandNotPass($r);
 
 	// 1. Check if previous hand consist of n cards
-	if ($firstLastValue[0] != 1 && $firstLastValue[0] != "PASS") return false;
+	if ($prevHand[0] != 1 && $prevHand[0] != "PASS") return false;
 
 	// 2. Validate and calculate the current hand
 	$currentHand = array("1", $cards[0]);
@@ -39,7 +39,7 @@ function oneCard($cards){
 	}
 
 	// 4. Chech if the hand is larger than the previous
-	if ($currentHand[1] < $firstLastValue[1]) return false;
+	if ($currentHand[1] < $prevHand[1]) return false;
 	else {
 		saveNewHand($r, join("-", $currentHand));
 		return true;
@@ -48,10 +48,10 @@ function oneCard($cards){
 
 function twoCard($cards){
 	$r = fetchLast();
-	$firstLastValue = split("-", $r["firstLast"]);
+	$prevHand = lastHandNotPass($r);
 
 	// 1. Check if previous hand consist of n cards
-	if ($firstLastValue[0] != 2 && $firstLastValue[0] != "PASS") return false;
+	if ($prevHand[0] != 2 && $prevHand[0] != "PASS") return false;
 
 	// 2. Validate and calculate the current hand
 	if (ceil($cards[0]/4) != ceil($cards[1]/4)) return false;
@@ -66,7 +66,7 @@ function twoCard($cards){
 	}
 
 	// 4. Chech if the hand is larger than the previous
-	if ($currentHand[1] < $firstLastValue[1]) return false;
+	if ($currentHand[1] < $prevHand[1]) return false;
 	else {
 		saveNewHand($r, join("-", $currentHand));
 		return true;
@@ -75,10 +75,10 @@ function twoCard($cards){
 
 function threeCard($cards){
 	$r = fetchLast();
-	$firstLastValue = split("-", $r["firstLast"]);
+	$prevHand = lastHandNotPass($r);
 
 	// 1. Check if previous hand consist of n cards
-	if ($firstLastValue[0] != 3 && $firstLastValue[0] != "PASS") return false;
+	if ($prevHand[0] != 3 && $prevHand[0] != "PASS") return false;
 
 	// 2. Validate and calculate the current hand
 	if (ceil($cards[0]/4) != ceil($cards[1]/4) || ceil($cards[1]/4) != ceil($cards[2]/4)) return false;
@@ -93,7 +93,7 @@ function threeCard($cards){
 	}
 
 	// 4. Chech if the hand is larger than the previous
-	if ($currentHand[1] < $firstLastValue[1]) return false;
+	if ($currentHand[1] < $prevHand[1]) return false;
 	else {
 		saveNewHand($r, join("-", $currentHand));
 		return true;
@@ -123,6 +123,14 @@ function saveNewHand($r, $newHand){
 	$q->execute(array($newHand, $r["firstLast"], $r["secondLast"], $r["thirdLast"], $_REQUEST["sessionid"]));
 }
 
+function lastHandNotPass($r){
+	if ($r["firstLast"] != "PASS")$o=$r["firstLast"];
+	else if ($r["secondLast"] != "PASS") $o=$r["secondLast"];
+	else if ($r["thirdLast"] != "PASS") $o=$r["thirdLast"];
+	else $o = "PASS";
+	return split("-", $o);
+}
+
 function checkIfLastThreeIsPass($r){
 	if (($r["firstLast"]=="PASS") && ($r["secondLast"]=="PASS") && ($r["thirdLast"]=="PASS")) return true;
 	else return false;
@@ -130,6 +138,7 @@ function checkIfLastThreeIsPass($r){
 
 /* Debugging Section for Arthur */
 /*
+
 function test(){
 	$input = fgets(STDIN);
 	$input = mb_substr($input, 0, -1);
