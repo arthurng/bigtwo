@@ -10,7 +10,7 @@ Representation of cards
 =======================
 
 The cards will be assigned a number from 52 down to 1.<br />
-**The filename of the PNGs should be changed with respect to this specification**
+*The PNGs should be named following this convention*
 
 The largest, *Two of Spades* would have a value of 52.<br />
 The second, *Two of Hearts* would have a value of 51.<br />
@@ -26,6 +26,11 @@ The rank of a hand will be represented as follow<br />
 The rank value should be stored in a string as shown:
 
 `The rank of the hand itself`-`The largest card in the hand`
+
+For example: <br />
+
+6-49 = A Full House with **Ace of Diamonds** being the largest card.<br />
+2-3 = A Pair of cards with **Three of Hearts** being the largest card.<br />
 
 **The mapping of the hand to the numeric representation**
 
