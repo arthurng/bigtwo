@@ -1,21 +1,5 @@
 <?php
 
-function test(){
-	$input = fgets(STDIN);
-	$input = mb_substr($input, 0, -1);
-	$input = explode(",", $input);
-	$_REQUEST["sessionid"] = 1;
-	if (checkLogic($input)) echo "It is valid.\n\n";
-	else echo "It is invalid.\n\n";
-} 
-
-function test2(){
-	$_REQUEST["sessionid"] = 1;
-	fetchLast();
-}
-
-test();
-
 // Entry point to the logic: checkLogic($cards);
 // $cards is an array of strings.
 function checkLogic($cards){
@@ -128,5 +112,24 @@ function checkIfLastThreeIsPass(){
 	if (($r["firstLast"]=="PASS") && ($r["secondLast"]=="PASS") && ($r["thirdLast"]=="PASS")) return true;
 	else return false;
 }
+
+/* Debugging Section for Arthur */
+/*
+function test(){
+	$input = fgets(STDIN);
+	$input = mb_substr($input, 0, -1);
+	$input = explode(",", $input);
+	$_REQUEST["sessionid"] = 1;
+	if (checkLogic($input)) echo "It is valid.\n\n";
+	else echo "It is invalid.\n\n";
+} 
+
+function test2(){
+	$_REQUEST["sessionid"] = 1;
+	fetchLast();
+}
+
+test();
+*/
 
 ?>
