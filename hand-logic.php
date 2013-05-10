@@ -2,6 +2,7 @@
 
 function test(){
 	$input = fgets(STDIN);
+	$input = mb_substr($input, 0, -1);
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
@@ -69,7 +70,7 @@ function twoCard($cards){
 	if ($firstLastValue[0] != 2 && $firstLastValue[0] != "PASS") return false;
 
 	// 2. Validate and calculate the current hand
-	if ($cards[0]%4 != $cards[1]%4) return false;
+	if (ceil($cards[0]/4) != ceil($cards[1]/4)) return false;
 	else {
 		$currentHand = array("2", max($cards));
 	}
