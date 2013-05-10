@@ -5,7 +5,7 @@
 		if($cardNum < 0){ throw new Exception('Invalid game');}
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		global $db;
-		$q = $db -> prepare("SELECT session FROM game WHERE roomid = ? LIMIT 1");
+		$q = $db -> prepare("SELECT sessionid FROM game WHERE roomid = ? LIMIT 1");
 		$q->execute(array($roomid));
 		$gamesession = $q->fetch();
 		$gamesession = (int)$gamesession+$roomid*2;
@@ -18,7 +18,7 @@
 			$dock[$i] = $dock[$j];
 			$dock[$j] = $tmp;
 		}
-		
+		// Return a shuffled dock
 		return $dock;
 	}
 	
@@ -33,7 +33,7 @@
 		$dock = shuffleCards($cardNum,$roomid);
 		$cards = array_chunk($dock,($cardNum/4));
 		$hand = $cards[$playerid];
-		
+		// Return a hand
 		return $hand;
 	}
 	
@@ -43,7 +43,7 @@
 		// Input validation
 		if($playerid > 3 || $playerid < 0){	throw new Exception('Invalid player');}
 		if($roomid < 0){ throw new Exception('Invalid player');}
-		
+		// Translate player id to player name
 		switch($playerid){
 			case 0:
 				$player = 'north';
@@ -64,6 +64,7 @@
 		$q->execute(array($roomid));
 		$r = $q->fetch();
 		// playerid = 9 means a computer player
+		// The player with id 0 does nothing while the player with id 9 would "pass" everytime (Not implemented yet)
 		if($r[$player] == '0' || $r[$player] == '9'){
 			$userid = getUserid();
 			$q = $db -> prepare("UPDATE game SET ".$player." = ? WHERE roomid = ?");
@@ -84,6 +85,7 @@
 		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
 		$q->execute(array($roomid));
 		$r = $q->fetch();
+		// Identify the user's seat
 		if($r['north'] == $userid){$player = 'north';}
 		elseif($r['south'] == $userid){$player = 'south';}
 		elseif($r['east'] == $userid){$player = 'east';}
@@ -120,7 +122,7 @@
 				} else {$seats[$i] = 'Computer';}
 			}
 		}
-		
+		// Return an array storing the user name of each seat
 		return $seats;
 	}
 	
@@ -128,24 +130,27 @@
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		global $db;
-		$q = $db -> prepare("SELECT session FROM game WHERE roomid = ? LIMIT 1");
+		$q = $db -> prepare("SELECT sessionid FROM game WHERE roomid = ? LIMIT 1");
 		$q->execute(array($roomid));
 		$r = $q->fetch();
-		
+		// Return current game session
 		return $r;
 	}
 	
 	function resetSession(){
+		// Renew game session
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		$newSession = @mt_rand(0,99999999999);
 		global $db;
-		$q = $db -> prepare("UPDATE game SET session = ? WHERE roomid = ?");
+		$q = $db -> prepare("UPDATE game SET sessionid = ? WHERE roomid = ?");
 		$q->execute(array($newSession,$roomid));
+		// Return the new game session
 		return $newSession;
 	}
 	
 	function createRoom(){
+		// Create a new game room
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		$session = @mt_rand(0,99999999999);
@@ -154,13 +159,14 @@
 		$q->execute(array($roomid));
 		$r = $q->fetch();
 		if($r == null){
-			$q = $db -> prepare("INSERT INTO game (session,roomid) VALUES(?,?)");
+			$q = $db -> prepare("INSERT INTO game (sessionid,roomid) VALUES(?,?)");
 			$q->execute(array($session,$roomid));
 		}
 		return true;
 	}
 	
 	function getUserid(){
+		// Get user id from facebook cookie
 		error_reporting(0);
 		if(!isset($_COOKIE['fbsr_123059651225050'])){
 			throw new Exception('Invalid player');
