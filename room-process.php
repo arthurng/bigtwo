@@ -5,10 +5,10 @@
 		if($cardNum < 0){ throw new Exception('Invalid game');}
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		global $db;
-		$q = $db -> prepare("SELECT sessionid FROM game WHERE roomid = ? LIMIT 1");
+		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
 		$q->execute(array($roomid));
-		$gamesession = $q->fetch();
-		$gamesession = (int)$gamesession+$roomid*2;
+		$r = $q->fetch();
+		$gamesession = (int)$r['sessionid']+$roomid*2;
 
 		@mt_srand($gamesession);
 		$dock = range(1, $cardNum);
@@ -25,14 +25,27 @@
 	function getHand(){
 		$cardNum = 52;
 		$roomid = (int)$_POST['roomid'];
-		$playerid = (int)$_POST['playerid'];
 		// Input validation
-		if($playerid > 3 || $playerid < 0){	throw new Exception('Invalid player');}
-		if($roomid < 0){ throw new Exception('Invalid player');}
+		if($roomid < 0){ throw new Exception('Invalid player');}		
+		// Get the user's seat
+		$player = verifySeat($roomid);
+		$playerid = player2id($player);
 			
 		$dock = shuffleCards($cardNum,$roomid);
 		$cards = array_chunk($dock,($cardNum/4));
 		$hand = $cards[$playerid];
+		
+		// Find out who holds diamond 3
+		foreach($hand as $card){
+			if($card == '1'){
+				// Translate player id to player name
+				$player = id2player($playerid);
+				global $db;
+				$q = $db -> prepare("UPDATE game SET turn = ? WHERE roomid = ?");
+				$q->execute(array($player,$roomid));
+			}
+		}
+		
 		// Return a hand
 		return $hand;
 	}
@@ -44,20 +57,7 @@
 		if($playerid > 3 || $playerid < 0){	throw new Exception('Invalid player');}
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		// Translate player id to player name
-		switch($playerid){
-			case 0:
-				$player = 'north';
-				break;
-			case 1:
-				$player = 'south';
-				break;
-			case 2:
-				$player = 'east';
-				break;
-			case 3:
-				$player = 'west';
-				break;
-		}
+		$player = id2player($playerid);
 		
 		global $db;
 		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
@@ -77,27 +77,17 @@
 	
 	function leaveSeat(){
 		$roomid = (int)$_POST['roomid'];
-		$userid = getUserid();
-		// Input validation
-		if($roomid < 0){ throw new Exception('Invalid player');}
-		
+		// Get the user's seat
+		$player = verifySeat($roomid);
+
 		global $db;
-		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
-		$q->execute(array($roomid));
-		$r = $q->fetch();
-		// Identify the user's seat
-		if($r['north'] == $userid){$player = 'north';}
-		elseif($r['south'] == $userid){$player = 'south';}
-		elseif($r['east'] == $userid){$player = 'east';}
-		elseif($r['west'] == $userid){$player = 'west';}
-		else{throw new Exception('Invalid player');}
-		
 		// playerid = 9 means a computer player
 		$q = $db -> prepare("UPDATE game SET ".$player." = ? WHERE roomid = ?");
 		$q->execute(array(9,$roomid));
 		return true;
 	}
 	
+	// Get the status of all seats
 	function checkSeats(){
 		$roomid = (int)$_POST['roomid'];
 		// Input validation
@@ -109,11 +99,12 @@
 		$r = $q->fetch();
 		if(!$r){ throw new Exception('Invalid room');}
 		$seats = array(0=>$r['north'], 1=>$r['south'], 2=>$r['east'], 3=>$r['west']);
-
+		// Translate user id to user name
 		for($i=0;$i<count($seats);$i++) {
 			if($seats[$i] == '9'){$seats[$i] = 'Computer';}
 			elseif($seats[$i] == '0'){$seats[$i] = 'No player';}
 			else{
+				// Get user name
 				$q = $db -> prepare("SELECT username FROM user WHERE userid = ? LIMIT 1");
 				$q->execute(array($seats[$i]));
 				$r = $q->fetch();
@@ -126,6 +117,27 @@
 		return $seats;
 	}
 	
+	// Identify the user's seat
+	function verifySeat($roomid){
+		$userid = getUserid();
+		// Input validation
+		if($roomid < 0){ throw new Exception('Invalid player');}
+		
+		global $db;
+		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
+		$q->execute(array($roomid));
+		$r = $q->fetch();
+		
+		if($r['north'] == $userid){$player = 'north';}
+		elseif($r['south'] == $userid){$player = 'south';}
+		elseif($r['east'] == $userid){$player = 'east';}
+		elseif($r['west'] == $userid){$player = 'west';}
+		else{throw new Exception('Invalid player');}
+		// Return the user's seat
+		return $player;
+	}
+	
+	// Get current game session
 	function getSession(){
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
@@ -137,10 +149,11 @@
 		return $r;
 	}
 	
-	function resetSession(){
-		// Renew game session
+	// Renew game session
+	function resetSession(){		
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
+		@mt_srand();
 		$newSession = @mt_rand(0,99999999999);
 		global $db;
 		$q = $db -> prepare("UPDATE game SET sessionid = ? WHERE roomid = ?");
@@ -165,6 +178,45 @@
 		return true;
 	}
 	
+	// Translate player id (0/1/2/3) to player name (north/east/south/west)
+	function id2player($playerid){
+		switch($playerid){
+			case 0:
+				$player = 'north';
+				break;
+			case 1:
+				$player = 'south';
+				break;
+			case 2:
+				$player = 'east';
+				break;
+			case 3:
+				$player = 'west';
+				break;
+			default: throw new Exception('Invalid player');
+		}
+		return $player;
+	}
+	// Translate player name (north/east/south/west) to player id (0/1/2/3)
+	function player2id($player){
+		switch($player){
+			case 'north':
+				$playerid = 0;
+				break;
+			case 'south':
+				$playerid = 1;
+				break;
+			case 'east':
+				$playerid = 2;
+				break;
+			case 'west':
+				$playerid = 3;
+				break;
+			default: throw new Exception('Invalid player');
+		}
+		return $playerid;
+	}
+	
 	function getUserid(){
 		// Get user id from facebook cookie
 		error_reporting(0);
@@ -172,6 +224,9 @@
 			throw new Exception('Invalid player');
 		} 
 		$data = parse_signed_request($_COOKIE['fbsr_123059651225050']);
+		if($data["user_id"] == null){
+			throw new Exception('Invalid Cookie');
+		}
 		return $data["user_id"];
 	}
 	

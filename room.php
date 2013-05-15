@@ -45,7 +45,8 @@
 			<input type="submit" name="submit" value="Get seat" />
 		</form>
 		<button type="button" onclick="leaveSeat();">Stand up</button> 
-		<button type="button" onclick="showDeck();">Get cards</button> 
+		<button type="button" onclick="showDeck();">Get cards</button>&nbsp; 
+		<button type="button" onclick="renewSession();">New session</button> 
 		<div id="playground">
 			<div id="player0">Player North<span id="user0"></span><br></div>
 			<div id="player1">Player South<span id="user1"></span><br></div>
@@ -65,10 +66,19 @@
 			type: 'POST',
 			data: data 
 		}).done(function(deck){
+			if(typeof deck != 'object'){
+				alert(deck);
+				return false;
+			}
 			var show = deck;
 			// Get index
 			tmp = data.split("&");
 			index = tmp[0].replace("playerid=","");
+			// Remove existing cards
+			$("#player0 > img").remove();
+			$("#player1 > img").remove();
+			$("#player2 > img").remove();
+			$("#player3 > img").remove();
 			// Print cards
 			for(var i=0; i < show.length; i++){
 				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
@@ -141,6 +151,17 @@
 		});
 		return false;
 	}checkSeats();
+	
+	function renewSession(){
+		var data;
+		data="roomid=<?php echo $roomid; ?>" + '&action=resetSession';
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			data: data 
+		});
+		return false;
+	}
 	
 	function id2player(id){
 		id = parseInt(id);
