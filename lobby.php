@@ -80,12 +80,36 @@
 			type: "POST",
 			data: {action: "getCurrentQueue", roomid: currentRoom} 
 		}).done(function(list){
-			$("#queue").html("");
+			var d = document.createElement("div");
 			for (player in list){
-				var t=$("<div>"+list[player].userid+"</div>")
-				$("#queue").append(t);
+				var user = getUsername(list[player].userid);
+				var t = document.createElement("div");
+				var n = document.createElement("span");
+					n.innerHTML = user.username;
+				var p = document.createElement("img");
+					p.src = user.picture;
+				t.appendChild(p);
+				t.appendChild(n);
+				d.appendChild(t);
+			}
+			
+			// to prevent reload of the page even
+			// when nothing has been changed.
+			if (d.innerHTML != $("#queue").html()){
+				$("#queue").html(d.innerHTML);
 			}
 		})
+	}
+
+	function getUsername(userid){
+		var r = $.ajax({
+			url: "lobby-process.php",
+			type: "POST",
+			async: false,
+			data: {action: "getUsername", userid: userid}
+		}).responseText;
+		r = $.parseJSON(r)[0];
+		return r;
 	}
 
 	function createRoom(){
@@ -94,7 +118,7 @@
 			type: "POST",
 			data: {action: "createRoom"} 
 		}).done(function(createdRoom){
-				joinRoom(createdRoom);
+			joinRoom(createdRoom);
 		});
 	}
 
