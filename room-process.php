@@ -137,7 +137,7 @@
 		return $player;
 	}
 	
-	// Get current game session
+	// Get current game session for debugging
 	function getSession(){
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
@@ -150,6 +150,7 @@
 	}
 	
 	// Renew game session
+	// It should be called after each game to ensure the dock is shuffled
 	function resetSession(){		
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
@@ -162,8 +163,8 @@
 		return $newSession;
 	}
 	
+	// Create a new game room
 	function createRoom(){
-		// Create a new game room
 		$roomid = (int)$_POST['roomid'];
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		$session = @mt_rand(0,99999999999);
