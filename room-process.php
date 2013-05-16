@@ -29,6 +29,7 @@
 		if($roomid < 0){ throw new Exception('Invalid player');}		
 		// Get the user's seat
 		$player = verifySeat($roomid);
+		if(!$player){ throw new Exception('Invalid player');}
 		$playerid = player2id($player);
 			
 		$dock = shuffleCards($cardNum,$roomid);
@@ -79,6 +80,7 @@
 		$roomid = (int)$_POST['roomid'];
 		// Get the user's seat
 		$player = verifySeat($roomid);
+		if(!$player){ throw new Exception('Invalid player');}
 
 		global $db;
 		// playerid = 9 means a computer player
@@ -88,11 +90,12 @@
 	}
 	
 	// Get the status of all seats
-	function checkSeats(){
+	function updateSeats(){
 		$roomid = (int)$_POST['roomid'];
 		// Input validation
 		if($roomid < 0){ throw new Exception('Invalid player');}
 		
+		// Get current users on seats
 		global $db;
 		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
 		$q->execute(array($roomid));
@@ -113,7 +116,14 @@
 				} else {$seats[$i] = 'Computer';}
 			}
 		}
-		// Return an array storing the user name of each seat
+		// Get the user's seat in terms of playerid
+		$player = verifySeat($roomid);
+		if($player){
+		$playerid = player2id($player);
+		$seats[4] = $playerid;
+		}
+		
+		// Return an array storing the user name of each seat and playerid
 		return $seats;
 	}
 	
@@ -121,7 +131,7 @@
 	function verifySeat($roomid){
 		$userid = getUserid();
 		// Input validation
-		if($roomid < 0){ throw new Exception('Invalid player');}
+		if($roomid < 0){ return null;}
 		
 		global $db;
 		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
@@ -132,7 +142,7 @@
 		elseif($r['south'] == $userid){$player = 'south';}
 		elseif($r['east'] == $userid){$player = 'east';}
 		elseif($r['west'] == $userid){$player = 'west';}
-		else{throw new Exception('Invalid player');}
+		else{return null;}
 		// Return the user's seat
 		return $player;
 	}
