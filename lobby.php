@@ -1,20 +1,9 @@
-<?php
-	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-	$q = $db -> prepare("SELECT * FROM queue WHERE userid = ? AND valid = 1");
-	$q->execute(array($_REQUEST["userid"]));
-	$r = $q->fetch();
-	if (!$r) {
-		$q = $db -> prepare("INSERT INTO queue (userid) VALUES (?)");
-		$q->execute(array($_REQUEST["userid"]));
-	}
-	error_log("visit flag");
-?>
 <html>
 <style type="text/css">
 @font-face{font-family:'Kite One';font-style:normal;font-weight:400;src:local('Kite One'),local('KiteOne-Regular'),url("font/kiteone.woff") format('woff')}
 body {font-family: 'Kite One';}
-#roomList > div {border: black solid 1px; margin: 2px; width: 50px;}
-#profilePicture {-webkit-clip-path: circle(50%, 50%, 20px); vertical-align: middle;}
+#roomList > div {border: black solid 1px; margin: 2px; width: 50px; text-align: center;}
+#profilePicture {clip-path: url(#clipping); -webkit-clip-path: circle(50%, 50%, 20px); vertical-align: middle;}
 </style>
 <body>
 	Welcome to the waiting Room of the game.<br>This is our queue now.<br><br>
@@ -23,8 +12,18 @@ body {font-family: 'Kite One';}
 	Friends in this room.
 	<div id="queue"></div>
 </body>
+<!-- Mask for mozilla --><svg><defs><clipPath id="clipping"><circle cx="25px" cy="25px" r="20px" /></clipPath></defs></svg>
 <script type="text/javascript" src="incl/jquery.js"></script>
 <script type="text/javascript">
+	
+	// Run before anything else -> SYNC request
+	$.ajax({
+		url: "lobby-process.php",
+		type: "POST",
+		async: false,
+		data: {action: "joinQueue"} 
+	});
+
 	var currentRoom=0;
 
 	window.onbeforeunload = function(){
@@ -56,7 +55,7 @@ body {font-family: 'Kite One';}
 			url: "lobby-process.php",
 			type: "POST",
 			async: false,
-			data: {action: "removeFromQueue", userid: "<?php echo $_REQUEST['userid']; ?>"} 
+			data: {action: "removeFromQueue"} 
 		});
 		return "You have left the game lobby.";
 	};
@@ -105,12 +104,12 @@ body {font-family: 'Kite One';}
 		})
 	}
 
-	function getUsername(userid){
+	function getUsername(){
 		var r = $.ajax({
 			url: "lobby-process.php",
 			type: "POST",
 			async: false,
-			data: {action: "getUsername", userid: userid}
+			data: {action: "getUsername"}
 		}).responseText;
 		r = $.parseJSON(r)[0];
 		return r;
@@ -131,7 +130,7 @@ body {font-family: 'Kite One';}
 		$.ajax({
 			url: "lobby-process.php",
 			type: "POST",
-			data: {action: "joinRoom", userid: "<?php echo $_REQUEST['userid']; ?>", roomid: roomNumber} 
+			data: {action: "joinRoom", roomid: roomNumber} 
 		});		
 	}		
 </script>

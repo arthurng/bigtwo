@@ -10,5 +10,5 @@
 		$q->execute(array($_REQUEST["userid"], $_REQUEST["username"], 0, $path));
 	}
 	
-	header('Location: lobby.php?userid='.$_REQUEST["userid"]);	
+	header('Location: lobby.php');	
 ?>
