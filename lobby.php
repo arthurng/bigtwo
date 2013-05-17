@@ -11,7 +11,10 @@
 ?>
 <html>
 <style type="text/css">
+@font-face{font-family:'Kite One';font-style:normal;font-weight:400;src:local('Kite One'),local('KiteOne-Regular'),url("font/kiteone.woff") format('woff')}
+body {font-family: 'Kite One';}
 #roomList > div {border: black solid 1px; margin: 2px; width: 50px;}
+#profilePicture {-webkit-clip-path: circle(50%, 50%, 20px); vertical-align: middle;}
 </style>
 <body>
 	Welcome to the waiting Room of the game.<br>This is our queue now.<br><br>
@@ -87,12 +90,13 @@
 				var n = document.createElement("span");
 					n.innerHTML = user.username;
 				var p = document.createElement("img");
+					p.id = "profilePicture";
 					p.src = user.picture;
 				t.appendChild(p);
 				t.appendChild(n);
 				d.appendChild(t);
 			}
-			
+
 			// to prevent reload of the page even
 			// when nothing has been changed.
 			if (d.innerHTML != $("#queue").html()){
