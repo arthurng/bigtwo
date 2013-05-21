@@ -52,7 +52,7 @@
 	}
 
 	function getUsername(){
-		$userid = getUserid();
+		$userid = $_REQUEST["userid"];
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 		$q = $db -> prepare("SELECT username, picture FROM user WHERE userid = ?");
 		$q->execute(array($userid));

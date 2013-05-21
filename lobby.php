@@ -2,8 +2,9 @@
 <style type="text/css">
 @font-face{font-family:'Kite One';font-style:normal;font-weight:400;src:local('Kite One'),local('KiteOne-Regular'),url("font/kiteone.woff") format('woff')}
 body {font-family: 'Kite One';}
-#roomList > div {border: black solid 1px; margin: 2px; width: 50px; text-align: center;}
+#roomList > div {border: black solid 1px; border-radius: 5px; margin: 2px; width: 50px; text-align: center; cursor: pointer;}
 #profilePicture {clip-path: url(#clipping); -webkit-clip-path: circle(50%, 50%, 20px); vertical-align: middle;}
+.userBox {width: 250px; border: black 1px solid; border-radius: 5px; margin-top: 10px; cursor: pointer;}
 </style>
 <body>
 	Welcome to the waiting Room of the game.<br>This is our queue now.<br><br>
@@ -86,6 +87,7 @@ body {font-family: 'Kite One';}
 			for (player in list){
 				var user = getUsername(list[player].userid);
 				var t = document.createElement("div");
+					t.className = "userBox";
 				var n = document.createElement("span");
 					n.innerHTML = user.username;
 				var p = document.createElement("img");
@@ -104,12 +106,12 @@ body {font-family: 'Kite One';}
 		})
 	}
 
-	function getUsername(){
+	function getUsername(userid){
 		var r = $.ajax({
 			url: "lobby-process.php",
 			type: "POST",
 			async: false,
-			data: {action: "getUsername"}
+			data: {action: "getUsername", userid: userid}
 		}).responseText;
 		r = $.parseJSON(r)[0];
 		return r;
