@@ -46,7 +46,7 @@
 				$q->execute(array($player,$roomid));
 			}
 		}
-		
+		rsort($hand);
 		// Return a hand
 		return $hand;
 	}
