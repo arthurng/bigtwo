@@ -16,7 +16,13 @@
 		$q = $db -> prepare("SELECT * FROM queue WHERE roomid = ? AND valid = 1");
 		$q->execute(array($_REQUEST["roomid"]));
 		$r = $q->fetchAll(PDO::FETCH_CLASS);
-		return $r;
+		$userid = getUserid();
+		foreach ($r as $i) {
+			if ($i->userid == $userid) $inside = 1;
+			else $inside = 0;
+		}
+		$arr = array("userlist" => $r, "inside" => $inside);
+		return $arr;
 	}
 
 	function getRoomList(){
@@ -28,11 +34,15 @@
 	}
 
 	function createRoom(){
+		if (!$_REQUEST["name"]) return "name_not_given";
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-		$q = $db -> prepare("SELECT roomid FROM queue WHERE valid = 1 ORDER BY roomid DESC LIMIT 1");
-		$q->execute();
+		$q = $db -> prepare("SELECT roomid FROM queue WHERE valid = 1 AND roomid=? LIMIT 1");
+		$q->execute(array(strtoupper($_REQUEST["name"])));
 		$r = $q->fetch();
-		return $r["roomid"]+1;
+		if ($r) return "name_taken";
+		else {
+			return "name_ok";
+		}
 	}
 
 	function removeFromQueue(){
@@ -45,10 +55,9 @@
 
 	function joinRoom(){
 		$userid = getUserid();
-		error_log($userid);
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 		$q = $db -> prepare("UPDATE queue SET roomid = ? WHERE userid = ? AND valid = 1");
-		$q->execute(array($_REQUEST["roomid"], $userid));		
+		$q->execute(array(strtoupper($_REQUEST["roomid"]), $userid));		
 	}
 
 	function getUsername(){
