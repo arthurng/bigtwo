@@ -110,7 +110,7 @@ function fiveCard($cards){
 	// 2. Validate and calculate the current hand
 		// 2.1 For Straight Case
 	if($prevHand[0] == 4) {
-		if( $cards[3] == ($cards[4] - 1) && $cards[2] == ($cards[3] - 1) && $cards[1] == ($cards[2] - 1) && $cards[0] == ($cards[1] - 1)){
+		if( ceil($cards[3]/4) == (ceil($cards[4]/4) - 1) && ceil($cards[2]/4) == (ceil($cards[3]/4) - 1) && ceil($cards[1]/4) == (ceil($cards[2]/4) - 1) && ceil($cards[0]/4) == (ceil($cards[1]/4) - 1)){
 			$currentHand = array("4", max($cards));
 		}
 		else {
