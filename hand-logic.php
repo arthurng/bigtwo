@@ -102,8 +102,12 @@ function threeCard($cards){
 
 function fiveCard($cards){
 	$r = fetchLast();
-	$firstLastValue = split("-", $r["firstLast"]);	
-	// not implemented yet
+	$prevHand = lastHandNotPass($r);
+	
+	//1. Check if previous hand consist of n cards
+	if ($prevHand[0] != 5 && $prevHand[0] != "PASS") return false;
+	
+	// 2. Validate and calculate the current hand
 }
 
 function fetchLast(){
