@@ -1,0 +1,177 @@
+@font-face {
+	font-family: 'Lobster13Regular';
+	src: local('Lobster'), url('font/Lobster_1.4.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+	background: #731e1e;
+	color: white;
+}
+
+#heading{
+	position: fixed;
+	top: 2%;
+	width: 100%;
+	text-align: center;
+	font-size: 60px;
+	line-height: 60px;
+	font-family: 'Lobster13Regular', Helvetica, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: rgba(0, 0, 0, .2) 3px 3px 3px;
+	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+}
+
+#roomList{
+	border: #c8c8c8 solid 1px;
+	border-radius: 5px;
+	overflow: scroll;
+	position: fixed;
+	top: 15%;
+	left: 10%;
+	width: 20%;
+	height: 65%;
+	background-color: 	rgba(0, 0, 0, .5);
+	-moz-box-shadow:    inset 0 0 20px #000000;
+	-webkit-box-shadow: inset 0 0 20px #000000;
+	box-shadow:         inset 0 0 20px #000000;
+}
+
+#roomList > div{
+	border-bottom: #c8c8c8 dashed 1px;
+	text-align: center;
+	cursor: pointer;
+	position: relative;
+	font-size: 16px;
+	height: 28px;
+	padding-top: 12px;
+}
+
+#roomList > div:hover{
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+#queue{
+	border: #c8c8c8 solid 1px;
+	border-radius: 5px;
+	position: fixed;
+	top: 15%;
+	left: 35%;
+	width: 55%;
+	height: 75%;
+	background-color: 	rgba(0, 0, 0, .5);
+	-moz-box-shadow:    inset 0 0 20px #000000;
+	-webkit-box-shadow: inset 0 0 20px #000000;
+	box-shadow:         inset 0 0 20px #000000;
+}
+
+#queue > span{
+	position: absolute;
+	top: 5%;
+	left: 4%;
+	height: calc(5% + 18px);
+	width: 92%;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 18px;
+	padding-top: calc(5% - 9px - 11.5px);
+	cursor: pointer;
+}
+
+#queue > div{
+	position: absolute;
+	top: 20%;
+	width: 20%;
+}
+#queue div:nth-of-type(1){left: 4%;}
+#queue div:nth-of-type(2){left: 28%;}
+#queue div:nth-of-type(3){left: 52%;}
+#queue div:nth-of-type(4){left: 76%;}
+
+#queue > div > span{
+	position: absolute;
+	top: 0.5em;
+	left: 0%;
+	width: 100%;
+	text-align: center;
+	color: #c8c8c8;
+}
+
+#newRoomButton{
+	border: #c8c8c8 solid 1px;
+	border-radius: 5px;
+	font-size: 16px;
+	text-align: center;
+	position: fixed;
+	top: 85%;
+	left: 10%;
+	width: 20%;
+	height: 5%;
+	cursor: pointer;
+	line-height: 1.9em;
+	background-color: 	rgba(0, 0, 0, .5);
+	-moz-box-shadow:    inset 0 0 20px #000000;
+	-webkit-box-shadow: inset 0 0 20px #000000;
+	box-shadow:         inset 0 0 20px #000000;
+}
+
+#newRoomButton #label{
+	position: fixed;
+	top: calc(85% + (5% / 2) - 1em + 1px);
+	left: 10%;
+	height: 2em;
+	width: 20%;
+	overflow: scroll;
+	text-align: center;
+}
+
+#inputNameBox{
+	position: fixed;
+	height: calc(5% + 1px);
+	width: 15%;
+	top: 85%;
+	left: 10%;
+	color: white;
+	background-color: rgba(0,0,0,0);
+	border: 0px black solid;
+	padding-left: 10px;
+}
+
+#submitNameBox{
+	position: fixed;
+	height: 5%;
+	width: 5%;
+	top: calc(85% + 1px);
+	left: 25%;
+	color: white;
+	background-color: black;
+	border-radius: 0px 5px 5px 0px;
+}
+
+#submitNameBox > img{
+	height: 100%;
+}
+
+.profilePicture{
+	position: relative;
+	top: 2em;
+	width: 100%;
+	clip-path: url(#clipping);
+	-webkit-clip-path: circle(50%, 50%, 40%);
+	vertical-align: middle;
+}
+
+@-webkit-keyframes greenPulse {
+	from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+	50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+	to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+}
+
+#queue > span{
+	-webkit-animation-name: greenPulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+}
