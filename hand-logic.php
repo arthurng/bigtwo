@@ -104,10 +104,32 @@ function fiveCard($cards){
 	$r = fetchLast();
 	$prevHand = lastHandNotPass($r);
 	
-	//1. Check if previous hand consist of n cards
-	if ($prevHand[0] != 5 && $prevHand[0] != "PASS") return false;
+	//1. Check if previous hand consist of 5 cards
+	if ($prevHand[0] < 4 &&  $prevHand[0] > 8 && $prevHand[0] != "PASS") return false;
 	
 	// 2. Validate and calculate the current hand
+		// 2.1 For Straight Case
+	if($prevHand[0] == 4) {
+		if( $cards[3] == ($cards[4] - 1) && $cards[2] == ($cards[3] - 1) && $cards[1] == ($cards[2] - 1) && $cards[0] == ($cards[1] - 1)){
+			$currentHand = array("4", max($cards));
+		}
+		else {
+			return false;
+		}
+		
+		// 2.2 Check if "passed three times"
+		if (checkIfLastThreeIsPass($r)) {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		
+		// 2.3 Chech if the hand is larger than the previous
+		if ($currentHand[1] < $prevHand[1]) return false;
+		else {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+	}
 }
 
 function fetchLast(){
