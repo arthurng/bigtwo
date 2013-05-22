@@ -117,19 +117,43 @@ function fiveCard($cards){
 			return false;
 		}
 		
-		// 2.2 Check if "passed three times"
+		// 2.1.1 Check if "passed three times"
 		if (checkIfLastThreeIsPass($r)) {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
 		}
 		
-		// 2.3 Chech if the hand is larger than the previous
+		// 2.1.2 Chech if the hand is larger than the previous
 		if ($currentHand[1] < $prevHand[1]) return false;
 		else {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
 		}
 	}
+	
+		// 2.2 For Flush Case
+	if($prevHand[0] == 5) {
+		if($cards[4]%4 == $cards[3]%4 && $cards[3]%4 == $cards[2]%4 && $cards[2]%4 == $cards[1]%4 && $cards[1]%4 == $cards[0]%4 && $cards[0]%4 == $cards[4]%4){
+			$currentHand = array("5", max($cards));
+		}
+		else {
+			return false;
+		}
+		
+		// 2.2.1 Check if "passed three times"
+		if (checkIfLastThreeIsPass($r)) {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		
+		// 2.2.2 Chech if the hand is larger than the previous
+		if ($currentHand[1] < $prevHand[1]) return false;
+		else {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+	}
+	
 }
 
 function fetchLast(){
