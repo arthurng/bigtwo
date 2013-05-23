@@ -1,5 +1,13 @@
 <?php
 
+/**********************************************/
+/**Remark: For Straight flush & Straight case**/
+/***********"JQKA2": The Biggest!!!!***********/
+/***********"34567": The Smallest!!!***********/
+/***** There is a gap between "2" & "3" *******/
+/******** E.g. NO "23456" or "A2345" **********/
+/**********************************************/
+
 // Entry point to the logic: checkLogic($cards);
 // $cards is an array of strings.
 function checkLogic($cards){
@@ -110,7 +118,16 @@ function fiveCard($cards){
 	// 2. Validate and calculate the current hand
 		// 2.1 For Straight Case
 	if($prevHand[0] == 4) {
-		if( ceil($cards[3]/4) == (ceil($cards[4]/4) - 1) && ceil($cards[2]/4) == (ceil($cards[3]/4) - 1) && ceil($cards[1]/4) == (ceil($cards[2]/4) - 1) && ceil($cards[0]/4) == (ceil($cards[1]/4) - 1)){
+		//Supposed the cards is from big to small
+		//Ban "QKA23","KA234" these 3 cases, hardcoded LOL
+		if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 10 && ceil($cards[4]/4) == 1) {
+			return false;
+		}
+		if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 2 && ceil($cards[4]/4) == 1) {
+			return false;
+		}
+		//Continue checking from "34567" to "JQKA2"
+		if(ceil($cards[1]/4) == (ceil($cards[0]/4) - 1) && ceil($cards[2]/4) == (ceil($cards[1]/4) - 1) && ceil($cards[3]/4) == (ceil($cards[2]/4) - 1) && ceil($cards[4]/4) == (ceil($cards[3]/4) - 1)){
 			$currentHand = array("4", max($cards));
 		}
 		else {
@@ -153,7 +170,105 @@ function fiveCard($cards){
 			return true;
 		}
 	}
-	
+		// 2.3 For Full House Case	
+	if($prevHand[0] == 6) {
+		// For case like "66655"
+		if(ceil($cards[1]/4) == (ceil($cards[2]/4)){
+			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
+				$currentHand = array("6", max($cards));
+			}
+		}
+		// For case like "66555"
+		else if(ceil($cards[1]/4) != (ceil($cards[2]/4)){
+			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
+				$currentHand = array("6", $cards[4]));
+			}
+		}
+		else {
+			return false;
+		}
+		
+		// 2.3.1 Check if "passed three times"
+		if (checkIfLastThreeIsPass($r)) {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		
+		// 2.3.2 Chech if the hand is larger than the previous
+		if ($currentHand[1] < $prevHand[1]) return false;
+		else {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+	}
+		// 2.4 For Four of a Kind Case
+	if($prevHand[0] == 7) {
+		// For case like "66665"
+		if(ceil($cards[0]/4) == (ceil($cards[1]/4)){
+			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4)){
+				$currentHand = array("7", max($cards));
+			}
+		}
+		// For case like "65555"
+		else if(ceil($cards[0]/4) != (ceil($cards[1]/4)){
+			if(ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
+				$currentHand = array("7", $cards[4]));
+			}
+		}
+		else {
+			return false;
+		}
+		
+		// 2.4.1 Check if "passed three times"
+		if (checkIfLastThreeIsPass($r)) {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		
+		// 2.4.2 Chech if the hand is larger than the previous
+		if ($currentHand[1] < $prevHand[1]) return false;
+		else {
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+	}
+		// 2.4 For Straight Flush Case
+	if($prevHand[0] == 8) {
+		//Check the Flowers first LOL
+		if($cards[4]%4 == $cards[3]%4 && $cards[3]%4 == $cards[2]%4 && $cards[2]%4 == $cards[1]%4 && $cards[1]%4 == $cards[0]%4 && $cards[0]%4 == $cards[4]%4){
+			//Supposed the cards is from big to small
+			//Ban "QKA23","KA234" these 3 cases, hardcoded LOL
+			if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 10 && ceil($cards[4]/4) == 1) {
+				return false;
+			}
+			if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 2 && ceil($cards[4]/4) == 1) {
+				return false;
+			}
+			//Continue checking from "76543" to "2AJQK"
+			if(ceil($cards[1]/4) == (ceil($cards[0]/4) - 1) && ceil($cards[2]/4) == (ceil($cards[1]/4) - 1) && ceil($cards[3]/4) == (ceil($cards[2]/4) - 1) && ceil($cards[4]/4) == (ceil($cards[3]/4) - 1)){
+				$currentHand = array("8", max($cards));
+			}
+			else {
+				return false;
+			}
+			
+			// 2.1.1 Check if "passed three times"
+			if (checkIfLastThreeIsPass($r)) {
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			
+			// 2.1.2 Chech if the hand is larger than the previous
+			if ($currentHand[1] < $prevHand[1]) return false;
+			else {
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+		}
+		else {
+			return false;
+		}
+	}
 }
 
 function fetchLast(){
