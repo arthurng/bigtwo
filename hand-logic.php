@@ -173,7 +173,7 @@ function fiveCard($cards){
 		// 2.3 For Full House Case	
 	if($prevHand[0] == 6) {
 		// For case like "66655"
-		if(ceil($cards[1]/4) == (ceil($cards[2]/4)){
+		if(ceil($cards[1]/4) == (ceil($cards[2]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
 				$currentHand = array("6", max($cards));
 			}
