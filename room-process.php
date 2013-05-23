@@ -35,18 +35,22 @@
 		$dock = shuffleCards($cardNum,$roomid);
 		$cards = array_chunk($dock,($cardNum/4));
 		$hand = $cards[$playerid];
+		global $db;
+		// Sort the hand
+		rsort($hand);
 		
 		// Find out who holds diamond 3
-		foreach($hand as $card){
-			if($card == '1'){
-				// Translate player id to player name
-				$player = id2player($playerid);
-				global $db;
-				$q = $db -> prepare("UPDATE game SET turn = ? WHERE roomid = ?");
-				$q->execute(array($player,$roomid));
-			}
+		if($hand[($cardNum/4-1)] == '1'){
+			// Translate player id to player name
+			$player = id2player($playerid);
+			$q = $db -> prepare("UPDATE game SET turn = ? WHERE roomid = ?");
+			$q->execute(array($player,$roomid));
 		}
-		rsort($hand);
+		
+		// Store the card
+		$q = $db -> prepare("UPDATE game SET card".$player." = ? WHERE roomid = ?");
+		$q->execute(array(implode(",",$hand),$roomid));
+		
 		// Return a hand
 		return $hand;
 	}
