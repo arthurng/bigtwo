@@ -212,7 +212,7 @@ function fiveCard($cards){
 		// For case like "65555"
 		else if(ceil($cards[0]/4) != (ceil($cards[1]/4))){
 			if(ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
-				$currentHand = array("7", $cards[4]));
+				$currentHand = array("7", $cards[4]);
 			}
 		}
 		else {
