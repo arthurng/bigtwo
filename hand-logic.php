@@ -204,13 +204,13 @@ function fiveCard($cards){
 		// 2.4 For Four of a Kind Case
 	if($prevHand[0] == 7) {
 		// For case like "66665"
-		if(ceil($cards[0]/4) == (ceil($cards[1]/4)){
+		if(ceil($cards[0]/4) == (ceil($cards[1]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4)){
 				$currentHand = array("7", max($cards));
 			}
 		}
 		// For case like "65555"
-		else if(ceil($cards[0]/4) != (ceil($cards[1]/4)){
+		else if(ceil($cards[0]/4) != (ceil($cards[1]/4))){
 			if(ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
 				$currentHand = array("7", $cards[4]));
 			}
