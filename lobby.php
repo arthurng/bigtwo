@@ -81,8 +81,11 @@
 			if (list["userlist"].length != 0){
 				var join = document.createElement("span");
 					join.id = "joinRoomButton";
-					if (list["inside"])join.innerHTML = "Waiting for more user...";
-					else join.innerHTML = "Join this room!";
+					label = document.createElement("span");
+					label.id = "label";
+					if (list["inside"]) label.innerHTML = "Waiting for more user...";
+					else label.innerHTML = "Join this room!";
+				join.appendChild(label);
 				d.appendChild(join);
 			}
 			for (player in list["userlist"]){
@@ -130,13 +133,18 @@
 			.attr("id", "inputNameBox")
 			.attr("placeholder", "Input name here.")
 			.attr("type", "text")
+			.focusout(function(){
+				timeoutForReset = setTimeout(revertNewRoomButton, 100);
+			})
 			.keyup(function(event){
 				if(event.keyCode == 13){
 					$("#submitNameBox").click();
-			}});
+				}
+			});
 		$submitNameBox = $(document.createElement('span'))
 			.attr("id", "submitNameBox")
-			.on("click", function(){
+			.click(function(){
+				clearTimeout(timeoutForReset);
 				$.ajax({
 					url: "lobby-process.php",
 					type: "POST",
@@ -147,7 +155,7 @@
 						joinRoom();
 						// return the button to the original state
 						$("#newRoomButton")
-							.on("click", function(){createRoom();})
+							.click(function(){createRoom();})
 							.html("<span id='label'>Create new room</span>");
 						// Facebook OG function to publish news of "Created a Room"
 						FB.api(
@@ -173,6 +181,10 @@
 		$("#inputNameBox").focus();
 	}
 
+	function revertNewRoomButton(){
+		$("#newRoomButton").click(function(){createRoom();}).html("<span id='label'>Create new room</span>");
+	}
+
 	function viewRoom(roomNumber){
 		currentRoom = roomNumber;
 	}
@@ -183,7 +195,7 @@
 			type: "POST",
 			data: {action: "joinRoom", roomid: currentRoom} 
 		}).done(function(){
-			$("#joinRoomButton").html("Waiting for more user...");
+			$("#joinRoomButton").label.html("Waiting for more user...");
 		});
 	}
 
