@@ -5,11 +5,14 @@
 	<div id="roomList"></div>
 	<div id="queue"></div>
 	<div id="newRoomButton"><span id="label">Create new room</span></div>
+	<div id="fb-root"></div>
 </body>
 <!-- Mask for mozilla --><svg><defs><clipPath id="clipping"><circle cx="25px" cy="25px" r="20px" /></clipPath></defs></svg>
 <script type="text/javascript" src="incl/jquery.js"></script>
+<script type="text/javascript" src="incl/og.js"></script>
 <script type="text/javascript">
 	// disableScroll();
+	var currentRoom="0";
 
 	// Run before anything else -> SYNC request
 	$.ajax({
@@ -18,8 +21,6 @@
 		async: false,
 		data: {action: "joinQueue"} 
 	});
-
-	var currentRoom="0";
 
 	window.onbeforeunload = function(){
 		quitQueue();
@@ -136,23 +137,34 @@
 		$submitNameBox = $(document.createElement('span'))
 			.attr("id", "submitNameBox")
 			.on("click", function(){
-				console.log($("#inputNameBox").val());
 				$.ajax({
 					url: "lobby-process.php",
 					type: "POST",
 					data: {action: "createRoom", name: $("#inputNameBox").val()} 
 				}).done(function(result){
 					if (result == "name_ok") {
-						currentRoom = $("#inputNameBox").val();
+						currentRoom = $("#inputNameBox").val().toUpperCase();
 						joinRoom();
 						// return the button to the original state
 						$("#newRoomButton")
 							.on("click", function(){createRoom();})
 							.html("<span id='label'>Create new room</span>");
+						// Facebook OG function to publish news of "Created a Room"
+						FB.api(
+							'me/cscibigtwo:create',
+							'post',
+							{
+								room: "https://nameless-lowlands-4480.herokuapp.com/ogobjects/createroom.php?name="+currentRoom
+							},
+							function(response) {
+								console.log(response);
+							}
+						);
+						// End of the Facebook plugin							
 					} else if (result == "name_taken"){
 						alert("Sorry, the name has already beem take. Please pick another name.")
 					} else {
-						alert("Darling, please input a name for the room.")
+						alert("Sweetheart, please input a name for the room.")
 					}
 				});				
 			})
