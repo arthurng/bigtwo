@@ -302,7 +302,7 @@ function checkIfLastThreeIsPass($r){
 }
 
 /* Debugging Section for Arthur */
-/*
+
 
 function test(){
 	$input = fgets(STDIN);
@@ -320,5 +320,5 @@ function test2(){
 
 test();
 
-*/
+
 ?>
