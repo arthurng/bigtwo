@@ -4,7 +4,7 @@
         <meta property="fb:app_id" content="123059651225050" />
         <meta property="og:title" content="<?php echo $_REQUEST['name'];?>" />
         <meta property="og:image" content="https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png" />
-        <meta property="og:url" content="https://nameless-lowlands-4480.herokuapp.com/ogobjects/createroom.php?name=<?php echo $_REQUEST['name'];?>" />
+        <meta property="og:url" content="https://secure.shop151.ierg4210.org/bigtwo/ogobjects/createroom.php?name=<?php echo $_REQUEST['name'];?>" />
         <meta property="og:type" content="cscibigtwo:room" />
     </head>
     <script type="text/javascript">
