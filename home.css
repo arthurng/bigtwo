@@ -31,3 +31,7 @@ body {
     margin-right: auto;
 	margin-top: 7%;
 }
+
+#logout{
+	float:right;
+}
