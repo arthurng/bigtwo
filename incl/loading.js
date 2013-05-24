@@ -1,6 +1,14 @@
 function AjaxLoading(){}
 var al = new AjaxLoading();
 
+// Append the loading.css file
+$loadingcss = $(document.createElement('link')).attr({
+	'rel': 'stylesheet',
+	'type': 'text/css',
+	'href': 'ui/loading.css'
+});
+$('head').append($loadingcss);
+
 AjaxLoading.prototype.show = function(){
 		var $dialog, $label, $image;
 		$dialog = $(document.createElement("div"))
@@ -24,14 +32,18 @@ AjaxLoading.prototype.show = function(){
 				'left': '100px',
 				'text-align': 'center',
 			});
-		$image = $(document.createElement("img"))
-			.attr("src", "ui/loading.gif")
+
+		$image = $(document.createElement("div"))
+			.attr("class", "loading")
 			.css({
-				'position': 'absolute',
-				'width': '500px',
-				'left': '-100px',
-				'top': '-120px',
+				'top': '60%',
+				'left': '10%',
+				'width': '80%',
 			});
+		$image.append(function(){
+			return $(document.createElement("span"));
+		});
+
 		$dialog.append($label).append($image);
 		$('body').append($dialog);
 		return true;
@@ -39,5 +51,5 @@ AjaxLoading.prototype.show = function(){
 
 AjaxLoading.prototype.hide = function(){
 	$('#loading').remove();
-	return true;	
+	return true;
 };
