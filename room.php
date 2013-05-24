@@ -127,23 +127,39 @@
 			for(var i=0; i < show.length; i++){
 				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
 				$("#player"+index).append(img);
-				
+				/*
 				$(img).click(choose=function(){
-					$(this).animate({"top": "-=50px"}, "slow", null, function(){
+					$(this).animate({"top": "-=50px"}, "fast", null, function(){
 						$(this).unbind('click');
 						$(this).click(function(){
-							$(this).animate({"top": "+=50px"}, "slow", null, function(){
+							$(this).animate({"top": "+=50px"}, "fast", null, function(){
 								$(this).unbind();
 								$(this).click(choose);
 							});
 						});
 					});
 				});
+				*/
+				$(img).click(function(e){select(e);});
 			}
 		});
 		return false;
 	}
-	
+
+	function select(e){
+		// console.log(e);
+		$(e.target).off("click");
+		$(e.target).animate({"top": "-=50px"}, "fast", null, function(){});
+		$(e.target).click(function(e){unselect(e);});
+	}
+
+	function unselect(e){
+		// console.log(e);
+		$(e.target).off("click");
+		$(e.target).animate({"top": "+=50px"}, "fast", null, function(){});
+		$(e.target).click(function(e){select(e);});
+	}
+
 	// Add player to a seat
 	function getSeat(){
 		leaveSeat();		
