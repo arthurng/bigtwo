@@ -185,8 +185,13 @@
 						// End of the Facebook plugin							
 					} else if (result == "name_taken"){
 						alert("Sorry, the name has already beem take. Please pick another name.");
-					} else {
+					} else if (result == "name_too_long"){
+						alert("Sorry, the name is too long. Please make sure to pick a name no longer than 16 characters.");
+					} else if (result == "name_not_given"){
 						alert("Sweetheart, please input a name for the room.");
+					} else {
+						alert("Sorry, an error occured.");
+						console.error("Error not handled. "+result);
 					}
 					al.hide();
 				});				

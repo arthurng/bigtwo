@@ -35,14 +35,13 @@
 
 	function createRoom(){
 		if (!$_REQUEST["name"]) return "name_not_given";
+		if (strlen($_REQUEST["name"]) > 16) return "name_too_long";
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 		$q = $db -> prepare("SELECT roomid FROM queue WHERE valid = 1 AND roomid=? LIMIT 1");
 		$q->execute(array(strtoupper($_REQUEST["name"])));
 		$r = $q->fetch();
 		if ($r) return "name_taken";
-		else {
-			return "name_ok";
-		}
+		else return "name_ok";
 	}
 
 	function removeFromQueue(){

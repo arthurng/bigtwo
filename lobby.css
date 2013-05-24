@@ -128,7 +128,7 @@
 
 .profilePicture{
 	position: relative;
-	top: 2em;
+	top: 3em;
 	width: 100%;
 	clip: rect(10%, 90%, 90%, 10%);
 	-webkit-clip-path: circle(50%, 50%, 40%);
