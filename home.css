@@ -33,5 +33,7 @@ body {
 }
 
 #logout{
-	float:right;
+	width:47;
+	height:20;
+	float: right;
 }
