@@ -9,7 +9,7 @@
 <div id="heading">BIG TWO - LOGIN</div>
 <div><img id="logo" src="ui/bigtwobanner.jpg" /></div>
 <div class="fb-login-button" data-show-faces="true" data-width="200" data-max-rows="1"></div>
-<div> <input id="logout" type="button" value="logout"> </input></div>
+<div> <img id="logout" src="ui/facebook_logout_button.png" /></div>
 <div id="fb-root"></div>
 </body>
 </html>
