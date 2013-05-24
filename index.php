@@ -1,5 +1,12 @@
 <html>
+
+<head>
+<title>BIG TWO</title>
+<link rel="stylesheet" type="text/css" href="home.css">
+</head>
+
 <body>
+<div id="heading">BIG TWO - LOGIN</div>
 <div class="fb-login-button" data-show-faces="true" data-width="200" data-max-rows="1"></div>
 <div> <input id="logout" type="button" value="logout"> </input></div>
 <div id="fb-root"></div>

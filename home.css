@@ -1,0 +1,26 @@
+@font-face {
+	font-family: 'Lobster13Regular';
+	src: local('Lobster'), url('font/Lobster_1.4.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+	background: #731e1e;
+	color: white;
+}
+
+#heading{
+	position: fixed;
+	top: 2%;
+	width: 100%;
+	text-align: center;
+	font-size: 60px;
+	line-height: 60px;
+	font-family: 'Lobster13Regular', Helvetica, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: rgba(0, 0, 0, .2) 3px 3px 3px;
+	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+}
