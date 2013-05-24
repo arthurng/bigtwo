@@ -4,7 +4,7 @@
 	$q->execute(array($_REQUEST["userid"]));
 	$r = $q->fetch();
 	if (!$r) {
-		$path = "http://graph.facebook.com/".$_REQUEST["userid"]."/picture";
+		$path = "https://graph.facebook.com/".$_REQUEST["userid"]."/picture";
 		
 		$q = $db -> prepare("INSERT INTO user (userid, username, score, picture) VALUES (?, ?, ?, ?)");
 		$q->execute(array($_REQUEST["userid"], $_REQUEST["username"], 0, $path));
