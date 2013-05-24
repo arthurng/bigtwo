@@ -1,16 +1,17 @@
 <html>
+<link rel="stylesheet" type="text/css" href="general.css">
 <link rel="stylesheet" type="text/css" href="lobby.css">
 <!--<audio autoplay loop><source src="ui/background.mp3"></audio>-->
 <body>
 	<div id="heading">BIG TWO - GAME LOBBY</div>
-	<div id="roomList"></div>
-	<div id="queue"></div>
-	<div id="newRoomButton">
+	<div id="roomList" class="box"></div>
+	<div id="queue" class="box"></div>
+	<div id="newRoomButton" class="box">
 		<span id="label">Create new room</span>
 	</div>
 	<div id="fb-root"></div>
 </body>
-<!-- Mask for mozilla --><svg><defs><clipPath id="clipping"><circle cx="25px" cy="25px" r="20px" /></clipPath></defs></svg>
+<!-- Mask for mozilla --><svg><defs><clipPath id="clipping"><circle cx="50" cy="50" r="50" /></clipPath></defs></svg>
 <script type="text/javascript" src="incl/jquery.js"></script>
 <script type="text/javascript" src="incl/og.js"></script>
 <script type="text/javascript" src="incl/loading.js"></script>
@@ -241,12 +242,11 @@
 	}
 
 	function disableScroll(){
-	window.onmousewheel = document.onmousewheel = function(e) {
-		e = e || window.event;
-		if (e.preventDefault)
-			e.preventDefault();
-		e.returnValue = false;
-	};
-}
+		window.onmousewheel = document.onmousewheel = function(e) {
+			e = e || window.event;
+			if (e.preventDefault) e.preventDefault();
+			e.returnValue = false;
+		};
+	}
 </script>
 </html>

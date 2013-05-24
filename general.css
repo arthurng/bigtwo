@@ -1,0 +1,28 @@
+body {
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+	background: #731e1e;
+	color: white;
+}
+
+#heading{
+	position: fixed;
+	top: 2%;
+	width: 100%;
+	text-align: center;
+	font-size: 60px;
+	line-height: 60px;
+	font-family: 'Lobster13Regular', Helvetica, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: rgba(0, 0, 0, .2) 3px 3px 3px;
+	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+}
+
+.box{
+	border: #c8c8c8 solid 1px;
+	border-radius: 5px;
+	background-color: 	rgba(0, 0, 0, .5);
+	-moz-box-shadow:    inset 0 0 20px #000000;
+	-webkit-box-shadow: inset 0 0 20px #000000;
+	box-shadow:         inset 0 0 20px #000000;	
+}

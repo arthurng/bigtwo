@@ -14,9 +14,9 @@ function endGame(roomid){
 		'position': 'fixed', 
 		'top': '15%', 
 		'left': leftSpacing,
-		'background-color': 'white',
-		'border-radius': '10px',
-		'box-shadow': '3px 3px 5px 0px #000',
+		'background-color': '#731e1e',
+		'border': '0px solid rgba(0,0,0,0)',
+		'border-radius': '5px',
 	});
 	$body.append($iframe);
 }

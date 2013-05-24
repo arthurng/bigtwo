@@ -25,7 +25,7 @@ AjaxLoading.prototype.show = function(){
 				'text-align': 'center',
 			});
 		$image = $(document.createElement("img"))
-			.attr("src", "http://images.wikia.com/tibia/en/images/6/6c/Minimap_Loading.gif")
+			.attr("src", "ui/loading.gif")
 			.css({
 				'position': 'absolute',
 				'width': '500px',
