@@ -24,3 +24,10 @@ body {
 	text-shadow: rgba(0, 0, 0, .2) 3px 3px 3px;
 	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
 }
+
+#logo{
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	margin-top: 8%;
+}
