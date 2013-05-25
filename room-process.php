@@ -31,11 +31,21 @@
 		$player = verifySeat($roomid);
 		if(!$player){ throw new Exception('Invalid player');}
 		$playerid = player2id($player);
+		
+		// Check whether there is four players
+		global $db;
+		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
+		$q->execute(array($roomid));
+		$r = $q->fetch();
+		if($r['north'] == '0' || $r['east'] == '0' || $r['south'] == '0' || $r['west'] == '0'){
+			// When there is an empty seat
+			throw new Exception('wait');
+		}
 			
 		$dock = shuffleCards($cardNum,$roomid);
 		$cards = array_chunk($dock,($cardNum/4));
 		$hand = $cards[$playerid];
-		global $db;
+		
 		// Sort the hand
 		rsort($hand);
 		
@@ -151,6 +161,22 @@
 		return $player;
 	}
 	
+	// Check whether the game is ended
+	function checkGameEnd(){
+		$roomid = (int)$_POST['roomid'];
+		if($roomid < 0){ throw new Exception('Invalid player');}
+		global $db;
+		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
+		$q->execute(array($roomid));
+		$r = $q->fetch();
+		
+		// When one of the players played all cards
+		if($r['cardnorth'] == null || $r['cardeast'] == null || $r['cardsouth'] == null || $r['cardwest'] == null){
+		
+		}
+		return true;
+	}
+	
 	// Get current game session for debugging
 	function getSession(){
 		$roomid = (int)$_POST['roomid'];
@@ -187,8 +213,8 @@
 		$q->execute(array($roomid));
 		$r = $q->fetch();
 		if($r == null){
-			$q = $db -> prepare("INSERT INTO game (sessionid,roomid) VALUES(?,?)");
-			$q->execute(array($session,$roomid));
+			$q = $db -> prepare("INSERT INTO game (sessionid,roomid,cardnorth,cardeast,cardsouth,cardwest) VALUES(?,?)");
+			$q->execute(array($session,$roomid,0,0,0,0));
 		}
 		return true;
 	}
