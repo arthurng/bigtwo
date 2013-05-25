@@ -144,14 +144,23 @@ function fiveCard($cards){
 			}
 			
 			// 2.1.2 Chech if the hand is larger than the previous
-			if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) 
-			{
-				goto four_kind;
-				return false;
-			}
-			else {
+			if($currentHand[0] > $prevHand[0]) {
 				saveNewHand($r, join("-", $currentHand));
 				return true;
+			}
+			else if ($currentHand[0] == $prevHand[0]) {
+				if($currentHand[1] > $prevHand[1]){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					goto four_kind;
+					return false;
+				}
+			}
+			else {
+				goto four_kind;
+				return false;
 			}
 		}
 		else {
@@ -187,13 +196,23 @@ function fiveCard($cards){
 		}
 		
 		// 2.4.2 Chech if the hand is larger than the previous
-		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) {	
-			goto full_house;
-			return false;
-		}
-		else {
+		if($currentHand[0] > $prevHand[0]) {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
+		}
+		else if ($currentHand[0] == $prevHand[0]) {
+			if($currentHand[1] > $prevHand[1]){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else {
+				goto full_house;
+				return false;
+			}
+		}
+		else {
+			goto full_house;
+			return false;
 		}
 	}	
 	
@@ -242,14 +261,6 @@ function fiveCard($cards){
 			goto flower;
 			return false;
 		}
-		/*if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) {
-			goto flower;
-			return false;
-		}
-		else {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
-		}*/
 	}
 
 		// 2.2 For Flush Case
@@ -270,13 +281,23 @@ function fiveCard($cards){
 		}
 		
 		// 2.2.2 Chech if the hand is larger than the previous
-		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) {
-			goto straight;
-			return false;
-		}
-		else {
+		if($currentHand[0] > $prevHand[0]) {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
+		}
+		else if ($currentHand[0] == $prevHand[0]) {
+			if($currentHand[1] > $prevHand[1]){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else {
+				goto straight;
+				return false;
+			}
+		}
+		else {
+			goto straight;
+			return false;
 		}
 	}
 	
@@ -350,7 +371,7 @@ function checkIfLastThreeIsPass($r){
 function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
-	$input = "1,2,52,51,50";
+	$input = "1,49,52,51,50";
 	//$input = "52,48,43,40,34";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
