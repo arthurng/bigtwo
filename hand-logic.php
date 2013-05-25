@@ -111,7 +111,7 @@ function threeCard($cards){
 function fiveCard($cards){
 	$r = fetchLast();
 	$prevHand = lastHandNotPass($r);
-	$$currentHand;
+	$currentHand;
 	
 	//1. Check if previous hand consist of 5 cards
 	if ($prevHand[0] < 4 &&  $prevHand[0] > 8 && $prevHand[0] != "PASS") return false;
