@@ -176,6 +176,7 @@ function fiveCard($cards){
 			}
 		}
 		else {
+			goto full_house;
 			return false;
 		}
 		
@@ -186,14 +187,18 @@ function fiveCard($cards){
 		}
 		
 		// 2.4.2 Chech if the hand is larger than the previous
-		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0]) ) return false;
+		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) {	
+			goto full_house;
+			return false;
+		}
 		else {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
 		}
 	}	
 	
-		// 2.3 For Full House Case	
+		// 2.3 For Full House Case
+	full_house:
 	if($prevHand[0] == 6 || $prevHand[0] < 6) {
 		// For case like "66655"
 		if(ceil($cards[1]/4) == (ceil($cards[2]/4))){
@@ -317,7 +322,7 @@ function checkIfLastThreeIsPass($r){
 function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
-	$input = "1,49,52,51,50";
+	$input = "1,2,52,51,50";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
