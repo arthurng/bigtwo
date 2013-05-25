@@ -141,7 +141,6 @@ function fiveCard($cards){
 		}
 		
 		// 2.1.2 Chech if the hand is larger than the previous
-		if ($currentHand[0] < $prevHand[0]) return false;
 		if ($currentHand[1] < $prevHand[1]) return false;
 		else {
 			saveNewHand($r, join("-", $currentHand));
@@ -196,7 +195,6 @@ function fiveCard($cards){
 		}
 		
 		// 2.3.2 Chech if the hand is larger than the previous
-		if ($currentHand[0] < $prevHand[0]) return false;
 		if ($currentHand[1] < $prevHand[1]) return false;
 		else {
 			saveNewHand($r, join("-", $currentHand));
@@ -204,7 +202,7 @@ function fiveCard($cards){
 		}
 	}
 		// 2.4 For Four of a Kind Case
-	if($prevHand[0] == 7) {
+	if($prevHand[0] == 7 || $prevHand[0] < 7) {
 		// For case like "66665"
 		if(ceil($cards[0]/4) == (ceil($cards[1]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4)){
@@ -228,7 +226,7 @@ function fiveCard($cards){
 		}
 		
 		// 2.4.2 Chech if the hand is larger than the previous
-		if ($currentHand[1] < $prevHand[1]) return false;
+		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0]) ) return false;
 		else {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
@@ -309,7 +307,7 @@ function checkIfLastThreeIsPass($r){
 function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
-	$input = "1,2,52,51,50";
+	$input = "1,49,52,51,50";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
