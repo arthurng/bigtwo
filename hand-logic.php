@@ -178,12 +178,20 @@ function fiveCard($cards){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4)){
 				$currentHand = array("7", max($cards));
 			}
+			else {
+				goto full_house;
+				return false;
+			}
 		}
 		// For case like "65555"
 		else if(ceil($cards[0]/4) != (ceil($cards[1]/4))){
 			if(ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
 				$currentHand = array("7", $cards[1]);
 			}
+			else {
+				goto full_house;
+				return false;
+			}			
 		}
 		else {
 			goto full_house;
@@ -225,12 +233,20 @@ function fiveCard($cards){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
 				$currentHand = array("6", max($cards));
 			}
+			else {
+				goto flower;
+				return false;
+			}
 		}
 		// For case like "66555"
 		else if(ceil($cards[1]/4) != (ceil($cards[2]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
 				$currentHand = array("6", $cards[2]);
 			}
+			else {
+				goto flower;
+				return false;
+			}			
 		}
 		else {
 			goto flower;
