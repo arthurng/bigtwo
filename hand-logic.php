@@ -333,7 +333,7 @@ function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
 	//$input = "1,2,52,51,50";
-	$input = "52,47,42,40,32";
+	$input = "52,48,43,40,34";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
