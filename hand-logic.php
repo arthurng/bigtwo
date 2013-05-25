@@ -196,14 +196,20 @@ function fiveCard($cards){
 		}
 		
 		// 2.4.2 Chech if the hand is larger than the previous
-		if($currentHand[0] > $prevHand[0]) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
-		}
-		else if ($currentHand[0] == $prevHand[0]) {
-			if($currentHand[1] > $prevHand[1]){
+		if($currentHand[0] && $currentHand[1]) {
+			if($currentHand[0] > $prevHand[0]) {
 				saveNewHand($r, join("-", $currentHand));
 				return true;
+			}
+			else if ($currentHand[0] == $prevHand[0]) {
+				if($currentHand[1] > $prevHand[1]){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					goto full_house;
+					return false;
+				}
 			}
 			else {
 				goto full_house;
