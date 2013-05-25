@@ -241,6 +241,7 @@ function fiveCard($cards){
 			$currentHand = array("5", max($cards));
 		}
 		else {
+			goto straight; 
 			return false;
 		}
 		
@@ -251,7 +252,10 @@ function fiveCard($cards){
 		}
 		
 		// 2.2.2 Chech if the hand is larger than the previous
-		if ($currentHand[1] < $prevHand[1]) return false;
+		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) {
+			goto straight;
+			return false;
+		}
 		else {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
@@ -259,6 +263,7 @@ function fiveCard($cards){
 	}
 	
 		// 2.1 For Straight Case
+	straight:
 	if($prevHand[0] == 4) {
 		//Supposed the cards is from big to small
 		//Ban "QKA23","KA234" these 3 cases, hardcoded LOL
@@ -328,7 +333,7 @@ function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
 	//$input = "1,2,52,51,50";
-	$input = "52,48,44,40,32";
+	$input = "52,47,42,40,32";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
