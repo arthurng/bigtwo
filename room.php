@@ -76,8 +76,10 @@
 			<input type="radio" name="playerid" value="3">West<br>
 			<input type="submit" name="submit" value="Get seat" />
 		</form>
+		<!-- Debugging --
 		<button type="button" onclick="leaveSeat();">Stand up</button> 
 		<button type="button" onclick="showDeck();">Get cards</button>
+		<!-- End of Debugging -->
 		<div id="playground">
 			<div class="playat top" id="player0">
 				Player North<span id="user0"></span><br>
@@ -101,28 +103,47 @@
 	
 	<script src="incl/jquery.js"></script>
 	<script>
-	var playerid;
+	var playerid; var checkEnd;
 	
 	// Print player's cards
-	function showDeck(){
+	function showDeck(){	
 		data="roomid=<?php echo $roomid; ?>" + '&action=getHand';
 		$.ajax({
 			url: "room-process.php",
 			type: 'POST',
 			data: data 
-		}).done(function(deck){
+		}).done(function(deck){		
+			// Error handling
 			if(typeof deck != 'object'){
-				alert(deck);
+				// When there is an empty seat
+				if(deck == 'Failed: wait'){
+					check4players = setTimeout(function(){
+						showDeck();
+					}
+					, 2000);
+				}
+				else {
+					// Display error message
+					alert(deck);
+				}
 				return false;
 			}
+			
 			var show = deck;
 			// Get index
 			index = playerid;
-			// Remove existing cards
+			
+			// Redraw player UI
 			$("#player0 > img").remove();
 			$("#player1 > img").remove();
 			$("#player2 > img").remove();
 			$("#player3 > img").remove();
+			$("#user0 > button").remove();
+			$("#user1 > button").remove();
+			$("#user2 > button").remove();
+			$("#user3 > button").remove();
+			$("#user"+playerid).append('<button type="button" onclick="leaveSeat();">Stand up</button> ');
+			
 			// Print cards
 			for(var i=0; i < show.length; i++){
 				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
@@ -142,6 +163,12 @@
 				*/
 				$(img).click(function(e){select(e);});
 			}
+			
+			// Check game End
+			checkEnd = setInterval(function(){
+				checkGameEnd();
+			}
+			, 2000);
 		});
 		return false;
 	}
@@ -193,10 +220,15 @@
 			data: data 
 		}).done(function(result){
 			updateSeats();
+			// Redraw player UI
 			$("#player0 > img").remove();
 			$("#player1 > img").remove();
 			$("#player2 > img").remove();
 			$("#player3 > img").remove();
+			$("#user0 > button").remove();
+			$("#user1 > button").remove();
+			$("#user2 > button").remove();
+			$("#user3 > button").remove();
 		});
 		return false;
 	}
@@ -219,6 +251,8 @@
 				playerid = result[4];
 				// Redraw game play area
 				$("#player"+playerid).attr('class', 'playat bottom');
+				$("#user"+playerid).append('&nbsp;<button type="button" onclick="showDeck();">Ready</button>');
+				$("#user"+playerid).append('&nbsp;<button type="button" onclick="leaveSeat();">Stand up</button> ');
 				switch(playerid){
 					case 0:
 						$("#player1").attr('class', 'playat top');
@@ -254,6 +288,20 @@
 		});
 		return false;
 	}updateSeats();
+	
+	function checkGameEnd(){
+		var data;
+		data="roomid=<?php echo $roomid; ?>" + '&action=checkGameEnd';
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			data: data 
+		}).done(function(result){
+			// Not Implemented yet
+			console.log('To be continued...');
+		});
+		return false;
+	}
 	
 	// Renew the game session, which should be called after each game
 	function renewSession(){
