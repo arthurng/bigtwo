@@ -367,7 +367,7 @@ function checkIfLastThreeIsPass($r){
 
 /* Debugging Section for Arthur */
 
-
+/*
 function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
@@ -386,6 +386,6 @@ function test2(){
 }
 
 test();
-
+*/
 
 ?>
