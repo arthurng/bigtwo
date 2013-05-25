@@ -117,22 +117,23 @@ function fiveCard($cards){
 	
 	// 2. Validate and calculate the current hand	
 		// 2.4 For Straight Flush Case
-	if($prevHand[0] == 8) {
+	if($prevHand[0] == 8 || $prevHand[0] < 8 ) {
 		//Check the Flowers first LOL
 		if($cards[4]%4 == $cards[3]%4 && $cards[3]%4 == $cards[2]%4 && $cards[2]%4 == $cards[1]%4 && $cards[1]%4 == $cards[0]%4 && $cards[0]%4 == $cards[4]%4){
 			//Supposed the cards is from big to small
 			//Ban "QKA23","KA234" these 3 cases, hardcoded LOL
-			if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 10 && ceil($cards[4]/4) == 1) {
+			/*if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 10 && ceil($cards[4]/4) == 1) {
 				return false;
 			}
 			if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 2 && ceil($cards[4]/4) == 1) {
 				return false;
-			}
+			}*/
 			//Continue checking from "76543" to "2AJQK"
 			if(ceil($cards[1]/4) == (ceil($cards[0]/4) - 1) && ceil($cards[2]/4) == (ceil($cards[1]/4) - 1) && ceil($cards[3]/4) == (ceil($cards[2]/4) - 1) && ceil($cards[4]/4) == (ceil($cards[3]/4) - 1)){
 				$currentHand = array("8", max($cards));
 			}
 			else {
+				goto four_kind;
 				return false;
 			}
 			
@@ -143,18 +144,24 @@ function fiveCard($cards){
 			}
 			
 			// 2.1.2 Chech if the hand is larger than the previous
-			if ($currentHand[1] < $prevHand[1]) return false;
+			if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) 
+			{
+				goto four_kind;
+				return false;
+			}
 			else {
 				saveNewHand($r, join("-", $currentHand));
 				return true;
 			}
 		}
 		else {
+			goto four_kind;
 			return false;
 		}
 	}	
 	
 		// 2.4 For Four of a Kind Case
+	four_kind:
 	if($prevHand[0] == 7 || $prevHand[0] < 7) {
 		// For case like "66665"
 		if(ceil($cards[0]/4) == (ceil($cards[1]/4))){
@@ -187,7 +194,7 @@ function fiveCard($cards){
 	}	
 	
 		// 2.3 For Full House Case	
-	if($prevHand[0] == 6) {
+	if($prevHand[0] == 6 || $prevHand[0] < 6) {
 		// For case like "66655"
 		if(ceil($cards[1]/4) == (ceil($cards[2]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
