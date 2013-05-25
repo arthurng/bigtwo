@@ -1,7 +1,7 @@
 <?php
+/* -------------------------------------------------*/ error_log("arrived");
 // include the hand-logic
 require 'hand-logic.php';
-
 // hand roomid player
 $roomid = $_REQUEST['roomid'];
 
@@ -17,7 +17,8 @@ $instance = $_REQUEST['player'];
 
 function checking(){
 	global $current, $instance, $roomid;
-	if ($current != $instance) return false;
+	/* -------------------------------------------------*/ error_log("running checking function");
+	if ($current != $instance) return 'false';
 	$hand = explode(',', $_REQUEST['hand']);
 
 	// Call checkLogic in hand-logic.php
@@ -57,6 +58,8 @@ function longpoll_master(){
 		$t = time();
 		$_SESSION['timer'] = $t;
 		$_SESSION['hand'] = null;
+		$_SESSION['done'] = 0;
+		$_SESSION['ready'] = 1;
 	session_write_close();
 	
 	// Loop to check the 'done' parameter (TOflag = Timeout flag)
@@ -92,6 +95,7 @@ function longpoll_master(){
 	// Read the session hand before return
 	session_start();
 		$returnHand = $_SESSION['hand'];
+		$_SESSION['ready'] = 0;
 	session_write_close();
 
 	return array('status' => 'proceed', 'hand' => $returnHand);	
@@ -99,9 +103,15 @@ function longpoll_master(){
 
 function longpoll_slave(){
 	global $current, $instance, $roomid;
-	$roomSessId = 'GAMESESSION'.$_REQUEST['roomid'];
+	$roomSessId = 'GAMESESSION'.$roomid;
 	session_name($roomSessId);
 	
+	do {
+		session_start();
+			$e = $_SESSION['ready'];
+		session_write_close();		
+	} while ($e);
+
 	do {
 		usleep(100000);
 		clearstatcache();
