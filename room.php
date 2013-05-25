@@ -1,17 +1,29 @@
 <?php 
 	$roomid = (int)$_REQUEST['roomid'];
 ?>
-<html>
+<html>	
 	<head>
+		<title>BIG TWO - Game room</title>
+		<link rel="stylesheet" type="text/css" href="general.css">
 		<style>
+			#seatForm{
+				float: left;
+				display: block;
+			}
+			
 			/*0,1,2,3 in north south east west order*/
 			#playground #centre{
 				height: 520px;
 				width: 520px;
-				border: 5px solid purple;
 				margin-top: 170px;
 				margin-left: 250px;	
 				position: absolute;
+				border: 5px solid purple;
+				border-radius: 5px;
+				background-color: 	rgba(0, 0, 0, .5);
+				-moz-box-shadow:    inset 0 0 20px #000000;
+				-webkit-box-shadow: inset 0 0 20px #000000;
+				box-shadow:         inset 0 0 20px #000000;	
 			}
 			#player0{
 				border:5px solid blue;
@@ -33,6 +45,12 @@
 				height: 160px;
 				width: 520px; 
 				position: absolute;
+				border: #c8c8c8 solid 1px;
+				border-radius: 5px;
+				background-color: 	rgba(0, 0, 0, .5);
+				-moz-box-shadow:    inset 0 0 20px #000000;
+				-webkit-box-shadow: inset 0 0 20px #000000;
+				box-shadow:         inset 0 0 20px #000000;	
 			}
 			.playat.top{
 				margin-left: 250px;			
@@ -68,12 +86,12 @@
 		</style>
 	</head>
 	<body>
-		Choose to show the player's card<br>
-		<form onsubmit="return getSeat();">
-			<input type="radio" name="playerid" value="0">North<br>
-			<input type="radio" name="playerid" value="1">South<br>
-			<input type="radio" name="playerid" value="2">East<br>
-			<input type="radio" name="playerid" value="3">West<br>
+		<form id="seatForm" onsubmit="return getSeat();">
+			Please get a seat:<br>
+			<span></span><input type="radio" name="playerid" value="0">North<br>
+			<span></span><input type="radio" name="playerid" value="1">South<br>
+			<span></span><input type="radio" name="playerid" value="2">East<br>
+			<span></span><input type="radio" name="playerid" value="3">West<br>
 			<input type="submit" name="submit" value="Get seat" />
 		</form>
 		<!-- Debugging --
@@ -82,22 +100,24 @@
 		<!-- End of Debugging -->
 		<div id="playground">
 			<div class="playat top" id="player0">
-				Player North<span id="user0"></span><br>
+				&nbsp;Player North<span id="user0"></span><br>
 				<span id="cardcorrection"></span>
 			</div>
 			<div class="playat bottom" id="player1">
-				Player South<span id="user1"></span><br>
+				&nbsp;Player South<span id="user1"></span><br>
 				<span id="cardcorrection"></span>
 			</div>
 			<div class="playat left" id="player2">
-				Player East<span id="user2"></span><br>
+				&nbsp;Player East<span id="user2"></span><br>
 				<span id="cardcorrection"></span>
 			</div>
 			<div class="playat right" id="player3">
-				Player West<span id="user3"></span><br>
+				&nbsp;Player West<span id="user3"></span><br>
 				<span id="cardcorrection"></span>
 			</div>
-			<div id="centre"></div>
+			<div id="centre">
+				<span id="systemMessage"></span>
+			</div>
 		</div>
 	</body>
 	
@@ -134,15 +154,8 @@
 			index = playerid;
 			
 			// Redraw player UI
-			$("#player0 > img").remove();
-			$("#player1 > img").remove();
-			$("#player2 > img").remove();
-			$("#player3 > img").remove();
-			$("#user0 > button").remove();
-			$("#user1 > button").remove();
-			$("#user2 > button").remove();
-			$("#user3 > button").remove();
-			$("#user"+playerid).append('<button type="button" onclick="leaveSeat();">Stand up</button> ');
+			spectatorGUI();
+			playerGUI(playerid, 'READY');
 			
 			// Print cards
 			for(var i=0; i < show.length; i++){
@@ -219,16 +232,17 @@
 			async: false,
 			data: data 
 		}).done(function(result){
-			updateSeats();
+			// Disable checking game end
+			clearInterval(checkEnd);
+			
+			updateSeats();			
 			// Redraw player UI
-			$("#player0 > img").remove();
-			$("#player1 > img").remove();
-			$("#player2 > img").remove();
-			$("#player3 > img").remove();
-			$("#user0 > button").remove();
-			$("#user1 > button").remove();
-			$("#user2 > button").remove();
-			$("#user3 > button").remove();
+			spectatorGUI();
+				// Redraw game play area
+				$("#player0").attr('class', 'playat top');
+				$("#player1").attr('class', 'playat bottom');
+				$("#player2").attr('class', 'playat right');
+				$("#player3").attr('class', 'playat left');
 		});
 		return false;
 	}
@@ -250,9 +264,8 @@
 				// Store playerid
 				playerid = result[4];
 				// Redraw game play area
-				$("#player"+playerid).attr('class', 'playat bottom');
-				$("#user"+playerid).append('&nbsp;<button type="button" onclick="showDeck();">Ready</button>');
-				$("#user"+playerid).append('&nbsp;<button type="button" onclick="leaveSeat();">Stand up</button> ');
+				playerGUI(playerid, 'NOTREADY');
+				$("#player"+playerid).attr('class', 'playat bottom');				
 				switch(playerid){
 					case 0:
 						$("#player1").attr('class', 'playat top');
@@ -275,13 +288,14 @@
 						$("#player2").attr('class', 'playat top');
 						break;
 					default:
+						spectatorGUI();
 						break;
 				}				
 			}
 			else{
 				// Redraw game play area
-				$("#player0").attr('class', 'playat bottom');
-				$("#player1").attr('class', 'playat top');
+				$("#player0").attr('class', 'playat top');
+				$("#player1").attr('class', 'playat bottom');
 				$("#player2").attr('class', 'playat right');
 				$("#player3").attr('class', 'playat left');
 			}
@@ -298,7 +312,7 @@
 			data: data 
 		}).done(function(result){
 			// Not Implemented yet
-			console.log('To be continued...');
+			console.log('Still playing...');
 		});
 		return false;
 	}
@@ -313,6 +327,37 @@
 			data: data 
 		});
 		return false;
+	}
+	
+	// Draw a gameplay UI for spectators
+	function spectatorGUI(){
+		$("#player0 > img").remove();
+		$("#player1 > img").remove();
+		$("#player2 > img").remove();
+		$("#player3 > img").remove();
+		
+		$("#user0 > button").remove();
+		$("#user1 > button").remove();
+		$("#user2 > button").remove();
+		$("#user3 > button").remove();
+		
+		$("#seatForm").css("display", "block");
+		
+		return true;
+	}
+	
+	// Draw a gameplay UI for players
+	function playerGUI(playerid, status){
+		$("#seatForm").css("display", "none");
+		if(status == 'NOTREADY'){
+			$("#user"+playerid).append('&nbsp;<button type="button" onclick="showDeck();">Ready</button>');
+			$("#user"+playerid).append('&nbsp;<button type="button" onclick="leaveSeat();">Stand up</button> ');
+		} 
+		else if(status == 'READY'){
+			$("#user"+playerid).append('&nbsp;<button type="button" onclick="leaveSeat();">Stand up</button>');
+		}
+		
+		return true;
 	}
 	
 	// Translate player id to player name
