@@ -309,7 +309,7 @@ function checkIfLastThreeIsPass($r){
 function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
-	$input = "1,49,52,51,50";
+	$input = "1,1,52,51,50";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
