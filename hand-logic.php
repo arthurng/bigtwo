@@ -47,7 +47,7 @@ function oneCard($cards){
 	}
 
 	// 4. Chech if the hand is larger than the previous
-	if ($currentHand[1] < $prevHand[1]) return false;
+	if ($currentHand[1] <= $prevHand[1]) return false;
 	else {
 		saveNewHand($r, join("-", $currentHand));
 		return true;
@@ -74,7 +74,7 @@ function twoCard($cards){
 	}
 
 	// 4. Chech if the hand is larger than the previous
-	if ($currentHand[1] < $prevHand[1]) return false;
+	if ($currentHand[1] <= $prevHand[1]) return false;
 	else {
 		saveNewHand($r, join("-", $currentHand));
 		return true;
@@ -101,7 +101,7 @@ function threeCard($cards){
 	}
 
 	// 4. Chech if the hand is larger than the previous
-	if ($currentHand[1] < $prevHand[1]) return false;
+	if ($currentHand[1] <= $prevHand[1]) return false;
 	else {
 		saveNewHand($r, join("-", $currentHand));
 		return true;
@@ -399,6 +399,7 @@ function test(){
 		if (checkLogic($input)) echo "It is valid.\n";
 		else echo "It is invalid.\n";
 	//}
-} test();
+}
+test();
 
 ?>
