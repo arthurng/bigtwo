@@ -213,6 +213,7 @@ function fiveCard($cards){
 			}
 		}
 		else {
+			goto flower;
 			return false;
 		}
 		
@@ -223,7 +224,10 @@ function fiveCard($cards){
 		}
 		
 		// 2.3.2 Chech if the hand is larger than the previous
-		if ($currentHand[1] < $prevHand[1]) return false;
+		if (($currentHand[1] < $prevHand[1]) || ($currentHand[0] < $prevHand[0])) {
+			goto flower;
+			return false;
+		}
 		else {
 			saveNewHand($r, join("-", $currentHand));
 			return true;
@@ -231,7 +235,8 @@ function fiveCard($cards){
 	}
 
 		// 2.2 For Flush Case
-	if($prevHand[0] == 5) {
+	flower:
+	if($prevHand[0] == 5 || $prevHand[0] < 5) {
 		if($cards[4]%4 == $cards[3]%4 && $cards[3]%4 == $cards[2]%4 && $cards[2]%4 == $cards[1]%4 && $cards[1]%4 == $cards[0]%4 && $cards[0]%4 == $cards[4]%4){
 			$currentHand = array("5", max($cards));
 		}
@@ -322,7 +327,8 @@ function checkIfLastThreeIsPass($r){
 function test(){
 	//$input = fgets(STDIN);
 	//$input = mb_substr($input, 0, -1);
-	$input = "1,2,52,51,50";
+	//$input = "1,2,52,51,50";
+	$input = "52,48,44,40,36";
 	$input = explode(",", $input);
 	$_REQUEST["sessionid"] = 1;
 	if (checkLogic($input)) echo "It is valid.\n\n";
