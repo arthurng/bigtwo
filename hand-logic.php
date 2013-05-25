@@ -390,10 +390,10 @@ function test(){
 		//$input = fgets(STDIN);
 		//$input = mb_substr($input, 0, -1);
 		//$input = "1,49,52,51,50";
-		//$input = "52,48,43,40,34";
+		$input = "52,48,43,40,34";
 		//$input = "52,48,44,40,36";	
 		//$input = "28,27,20,19,18";
-		$input = "52,48,44,40,35";
+		//$input = "52,48,44,40,34";
 		$input = explode(",", $input);
 		$_REQUEST["roomid"] = 1;
 		if (checkLogic($input)) echo "It is valid.\n";
