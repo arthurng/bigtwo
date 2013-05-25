@@ -141,6 +141,7 @@ function fiveCard($cards){
 		}
 		
 		// 2.1.2 Chech if the hand is larger than the previous
+		if ($currentHand[0] < $prevHand[0]) return false;
 		if ($currentHand[1] < $prevHand[1]) return false;
 		else {
 			saveNewHand($r, join("-", $currentHand));
@@ -195,6 +196,7 @@ function fiveCard($cards){
 		}
 		
 		// 2.3.2 Chech if the hand is larger than the previous
+		if ($currentHand[0] < $prevHand[0]) return false;
 		if ($currentHand[1] < $prevHand[1]) return false;
 		else {
 			saveNewHand($r, join("-", $currentHand));
