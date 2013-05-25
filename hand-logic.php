@@ -337,8 +337,8 @@ function fiveCard($cards){
 
 function fetchLast(){
 	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-	$q = $db -> prepare("SELECT firstLast, secondLast, thirdLast, forthLast FROM game WHERE sessionid = ? LIMIT 1");
-	$q->execute(array($_REQUEST["sessionid"]));
+	$q = $db -> prepare("SELECT firstLast, secondLast, thirdLast, forthLast FROM game WHERE roomid = ? LIMIT 1");
+	$q->execute(array($_REQUEST["roomid"]));
 	$r = $q->fetch();
 
 	if (!$r) {
@@ -348,8 +348,8 @@ function fetchLast(){
 
 function saveNewHand($r, $newHand){
 	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-	$q = $db -> prepare("UPDATE game SET firstLast = ?, secondLast = ?, thirdLast = ?, forthLast = ? WHERE sessionid = ?");
-	$q->execute(array($newHand, $r["firstLast"], $r["secondLast"], $r["thirdLast"], $_REQUEST["sessionid"]));
+	$q = $db -> prepare("UPDATE game SET firstLast = ?, secondLast = ?, thirdLast = ?, forthLast = ? WHERE roomid = ?");
+	$q->execute(array($newHand, $r["firstLast"], $r["secondLast"], $r["thirdLast"], $_REQUEST["roomid"]));
 }
 
 function lastHandNotPass($r){
@@ -367,25 +367,17 @@ function checkIfLastThreeIsPass($r){
 
 /* Debugging Section for Arthur */
 
-/*
 function test(){
-	//$input = fgets(STDIN);
-	//$input = mb_substr($input, 0, -1);
-	//$input = "1,49,52,51,50";
-	//$input = "52,48,43,40,34";
-	$input = "52,48,44,40,36";
-	$input = explode(",", $input);
-	$_REQUEST["sessionid"] = 1;
-	if (checkLogic($input)) echo "It is valid.\n\n";
-	else echo "It is invalid.\n\n";
-} 
-
-function test2(){
-	$_REQUEST["sessionid"] = 1;
-	fetchLast();
-}
-
-test();
-*/
+	while(true){
+		echo "Enter the hand: ";
+		$input = fgets(STDIN);
+		$input = mb_substr($input, 0, -1);
+		//$input = "1,49,52,51,50";
+		$input = explode(",", $input);
+		$_REQUEST["roomid"] = 1;
+		if (checkLogic($input)) echo "It is valid.\n";
+		else echo "It is invalid.\n";
+	}
+} test();
 
 ?>
