@@ -181,7 +181,7 @@ function fiveCard($cards){
 		// For case like "65555"
 		else if(ceil($cards[0]/4) != (ceil($cards[1]/4))){
 			if(ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
-				$currentHand = array("7", $cards[4]);
+				$currentHand = array("7", $cards[1]);
 			}
 		}
 		else {
@@ -228,7 +228,7 @@ function fiveCard($cards){
 		// For case like "66555"
 		else if(ceil($cards[1]/4) != (ceil($cards[2]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[2]/4) == ceil($cards[3]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
-				$currentHand = array("6", $cards[4]);
+				$currentHand = array("6", $cards[2]);
 			}
 		}
 		else {
