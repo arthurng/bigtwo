@@ -383,7 +383,7 @@ function checkIfLastThreeIsPass($r){
 }
 
 /* Debugging Section for Arthur */
-
+/*
 function test(){
 	//while(true){
 		//echo "Enter the hand: ";
@@ -403,5 +403,5 @@ function test(){
 	//}
 }
 test();
-
+*/
 ?>
