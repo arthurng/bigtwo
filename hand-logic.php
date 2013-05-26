@@ -11,7 +11,7 @@
 // Entry point to the logic: checkLogic($cards);
 // $cards is an array of strings.
 function checkLogic($cards){
-	//$cards = explode(",", $cards);
+	$cards = explode(",", $cards);
 	switch (count($cards)){
 		case 1:
 			$validity = oneCard($cards);
