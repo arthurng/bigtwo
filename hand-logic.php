@@ -403,10 +403,10 @@ function checkValidity($handToCheck){
 	$r2 = $q2->fetch();
 	$origHand = explode(",", $r2);
 	// Check if the hand presents in the user's cards
-	$checkingArray = array_diff($handToCheck, $r2);
+	$checkingArray = array_diff($origHand, $handToCheck);
 	if (!empty($checkingArray)) return false;
 	else {
-		$newHand = implode(",",array_diff($r2, $handToCheck));
+		$newHand = implode(",",array_diff($origHand, $handToCheck));
 		$q = $db -> prepare("UPDATE user SET ? = ? WHERE roomid = ?");
 		$q-> execute(array("card".$r["turn"] ,$newHand, $_REQUEST["roomid"]));
 		return true;
