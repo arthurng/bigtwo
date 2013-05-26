@@ -344,6 +344,9 @@ function fiveCard($cards){
 				saveNewHand($r, join("-", $currentHand));
 				return true;
 			}
+			else {
+				return false;
+			}
 		}
 		
 		// 2.1.2 Chech if the hand is larger than the previous
@@ -352,6 +355,9 @@ function fiveCard($cards){
 			if(checkValidity($cards)){
 				saveNewHand($r, join("-", $currentHand));
 				return true;
+			}
+			else {
+				return false;
 			}
 		}
 	}
