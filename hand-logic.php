@@ -401,15 +401,12 @@ function checkValidity($handToCheck){
 	$q2 = $db -> prepare("SELECT ? FROM game WHERE roomid = ?");
 	$q2-> execute(array("card".$user["turn"] ,$_REQUEST["roomid"]));
 	$r2 = $q2->fetch();
-	if(($r2)){
-		echo $r2;
-	}
-	$origHand = explode(",", $r2);
+	//$origHand = explode(",", $r2);
 	// Check if the hand presents in the user's cards
-	$checkingArray = array_diff($origHand, $handToCheck);
+	$checkingArray = array_diff($r2, $handToCheck);
 	if (empty($checkingArray)) return false;
 	else {
-		$newHand = implode(",",array_diff($origHand, $handToCheck));
+		$newHand = implode(",",array_diff($r2, $handToCheck));
 		$q3 = $db -> prepare("UPDATE game SET ? = ? WHERE roomid = ?");
 		$q3-> execute(array("card".$user["turn"] ,$newHand, $_REQUEST["roomid"]));
 		return true;
