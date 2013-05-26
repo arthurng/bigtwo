@@ -401,7 +401,7 @@ function checkValidity($handToCheck){
 	
 	$q2 = $db -> prepare("SELECT ? FROM game WHERE roomid = ?");
 	$q2-> execute(array(("card".$user["turn"]) ,$_REQUEST["roomid"]));
-	$r2 = $q2->fetch();
+	$r2 = $q2->fetch(PDO::FETCH_ASSOC);
 
 	print_r($r2);
 	
