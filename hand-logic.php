@@ -403,13 +403,12 @@ function checkValidity($handToCheck){
 	$r2 = $q2->fetch();
 	$origHand = explode(",", $r2[("card".$user["turn"])]);
 	// Check if the hand presents in the user's cards
-	$checkingArray = array_diff($r2[("card".$user["turn"])], $handToCheck);
+	$checkingArray = array_diff($origHand, $handToCheck);
 	if (empty($checkingArray)) return false;
 	else {
-		$newHand = implode(",",array_diff($r2, $handToCheck));
-		echo $newHand;
+		$newHand = implode(",",array_diff($origHand, $handToCheck));
 		$q3 = $db -> prepare("UPDATE game SET ? = ? WHERE roomid = ?");
-		$q3-> execute(array("card".$user["turn"] ,$newHand, $_REQUEST["roomid"]));
+		$q3-> execute(array(("card".$user["turn"]) ,$newHand, $_REQUEST["roomid"]));
 		return true;
 	}
 	// if the function return false, then "hand-logic" should return false as the required cards are not held by the user
