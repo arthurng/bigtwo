@@ -407,7 +407,7 @@ function checkValidity($handToCheck){
 	if (empty($checkingArray)) return false;
 	else {
 		$newHand = implode(",",array_diff($origHand, $handToCheck));
-		$q = $db -> prepare("UPDATE user SET ? = ? WHERE roomid = ?");
+		$q = $db -> prepare("UPDATE game SET ? = ? WHERE roomid = ?");
 		$q-> execute(array("card".$user["turn"] ,$newHand, $_REQUEST["roomid"]));
 		return true;
 	}
