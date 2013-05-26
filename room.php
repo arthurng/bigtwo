@@ -123,7 +123,9 @@
 	
 	<script src="incl/jquery.js"></script>
 	<script>
-	var playerid; var checkEnd;
+	var playerid;
+	var checkEnd;
+	var hand = new Array();
 	
 	// Print player's cards
 	function showDeck(){	
@@ -161,21 +163,16 @@
 			for(var i=0; i < show.length; i++){
 				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
 				$("#player"+index).append(img);
-				/*
-				$(img).click(choose=function(){
-					$(this).animate({"top": "-=50px"}, "fast", null, function(){
-						$(this).unbind('click');
-						$(this).click(function(){
-							$(this).animate({"top": "+=50px"}, "fast", null, function(){
-								$(this).unbind();
-								$(this).click(choose);
-							});
-						});
-					});
-				});
-				*/
 				$(img).click(function(e){select(e);});
 			}
+			
+			// push the confirm and pass button
+			confirm = $('<br><button type="button">Confirm</button>');
+			pass = $('<button type="button">Pass</button>');
+			$(confirm).attr('onclick', 'confirmFire();');
+			$(pass).attr('onclick', 'passFire();');
+			$('.bottom').append(confirm);
+			$('.bottom').append(pass);
 			
 			// Check game End
 			checkEnd = setInterval(function(){
@@ -185,19 +182,58 @@
 		});
 		return false;
 	}
+	
+	function confirmFire(){
+		joinedHand = hand.join('-');
+		data="roomid=<?php echo $roomid; ?>" + '&action=confirm' + '&hand=' + joinedHand;
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			data: data 
+		}).done(function(validity){
+			if(validity==-1){
+				$('systemMessage').text('Your hand has some problem. Please choose again.');
+			}else if(validity==1){
+				$('systemMessage').text('Okay. Next user.');
+			}
+			
+			//initiate longpoll(slave)
+		});
+	}
+	
+	function passFire(){
+		data="roomid=<?php echo $roomid; ?>" + '&action=pass';
+		$.ajax({
+			url: "room-process.php",
+			type: 'POST',
+			data: data 
+		}).done(function(){
+			//initiate longpoll(slave)
+		});
+	}
 
 	function select(e){
+		e.stopPropagation();
 		// console.log(e);
 		$(e.target).off("click");
 		$(e.target).animate({"top": "-=50px"}, "fast", null, function(){});
 		$(e.target).click(function(e){unselect(e);});
+		// choose cards
+		chosenCard = e.target.src.replace(/^.*[\\\/]/, '').replace(/\.[^.]*$/,'');
+		hand.push(chosenCard);
+		console.log(hand);
 	}
 
 	function unselect(e){
+		e.stopPropagation();
 		// console.log(e);
 		$(e.target).off("click");
 		$(e.target).animate({"top": "+=50px"}, "fast", null, function(){});
 		$(e.target).click(function(e){select(e);});
+		// unchoose cards
+		unchosenCard = e.target.src.replace(/^.*[\\\/]/, '').replace(/\.[^.]*$/,'');
+		hand.splice(hand.indexOf(unchosenCard), 1);
+		console.log(hand);
 	}
 
 	// Add player to a seat

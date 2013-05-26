@@ -1,4 +1,25 @@
 <?php
+
+include("hand-logic.php");
+
+	function confirm(){
+		$hand = $_REQUEST['hand'];
+		$temp = explode("-", $hand);
+		if(checkLogic($temp)==true){
+			//update last hand to db
+			$r = fetchLast();
+			saveNewHand($r, $hand);
+			return 1;//return true for ajax
+		}
+		else{return -1;}
+	}
+	
+	function pass(){
+		$r = fetchLast();
+		saveNewHand($r, 'PASS');
+		return true;
+	}
+
 	function shuffleCards($cardNum,$roomid){
 		$cardNum = (int)$cardNum;
 		$roomid = (int)$roomid;
