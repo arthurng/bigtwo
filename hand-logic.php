@@ -404,11 +404,11 @@ function checkValidity($handToCheck){
 	$origHand = explode(",", $r2);
 	// Check if the hand presents in the user's cards
 	$checkingArray = array_diff($origHand, $handToCheck);
-	if (!empty($checkingArray)) return false;
+	if (empty($checkingArray)) return false;
 	else {
 		$newHand = implode(",",array_diff($origHand, $handToCheck));
 		$q = $db -> prepare("UPDATE user SET ? = ? WHERE roomid = ?");
-		$q-> execute(array("card".$r["turn"] ,$newHand, $_REQUEST["roomid"]));
+		$q-> execute(array("card".$user["turn"] ,$newHand, $_REQUEST["roomid"]));
 		return true;
 	}
 	// if the function return false, then "hand-logic" should return false as the required cards are not held by the user
