@@ -340,15 +340,19 @@ function fiveCard($cards){
 		
 		// 2.1.1 Check if "passed three times"
 		if (checkIfLastThreeIsPass($r)) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
 		}
 		
 		// 2.1.2 Chech if the hand is larger than the previous
 		if ($currentHand[1] < $prevHand[1]) return false;
 		else {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
 		}
 	}
 }
@@ -406,7 +410,7 @@ function checkValidity($handToCheck){
 }
 
 /* Debugging Section for Arthur */
-/*
+
 function test(){
 	//while(true){
 		//echo "Enter the hand: ";
@@ -418,7 +422,7 @@ function test(){
 		//$input = "52,48,44,40,36";	
 		//$input = "28,27,20,19,18";
 		//$input = "52,48,44,40,34";
-		//$input = "52,48,44,40,32";
+		$input = "52,48,44,40,32";
 		$input = explode(",", $input);
 		$_REQUEST["roomid"] = 1;
 		if (checkLogic($input)) echo "It is valid.\n";
@@ -426,5 +430,5 @@ function test(){
 	//}
 }
 test();
-*/
+
 ?>
