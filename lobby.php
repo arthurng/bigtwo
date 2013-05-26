@@ -9,6 +9,7 @@
 	<div id="newRoomButton" class="box">
 		<span id="label">Create new room</span>
 	</div>
+	<div id="logout"><img id="logout" src="ui/facebook_logout_button.png" /></div>
 	<div id="fb-root"></div>
 </body>
 <!-- Mask for mozilla --><svg><defs><clipPath id="clipping"><circle cx="50" cy="50" r="50" /></clipPath></defs></svg>
@@ -223,6 +224,21 @@
 	}
 
 	// ----- MISC FUNCTION ----- //
+	
+	$("#logout").click(function(){
+		var cfm = confirm("Note: This will also log you out from facebook.com");
+		if (cfm) facebookLogout();
+		else return false;
+	});
+
+	function facebookLogout() {
+		if (FB.getAuthResponse()) {
+			FB.logout(function(response) {
+				window.location.href = "index.php";
+				// user is now logged out
+			});
+		}
+	}
 
 	function getUsername(userid){
 		var r = $.ajax({

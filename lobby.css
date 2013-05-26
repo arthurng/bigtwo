@@ -5,6 +5,13 @@
 	font-style: normal;
 }
 
+#logout{
+	position: fixed;
+	right: 1%;
+	bottom: 1%;
+	z-index: 10000;
+}
+
 #roomList{
 	overflow: visible;
 	position: fixed;
