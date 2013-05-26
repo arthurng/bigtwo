@@ -395,10 +395,10 @@ function checkIfLastThreeIsPass($r){
 
 function checkValidity($handToCheck){
 	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-	$q = $db -> prepare("SELECT turn FROM user WHERE roomid = ?");
+	$q = $db -> prepare("SELECT turn FROM game WHERE roomid = ?");
 	$q-> execute(array($_REQUEST["roomid"]));
 	$user = $q->fetch();
-	$q2 = $db -> prepare("SELECT ? FROM user WHERE roomid = ?");
+	$q2 = $db -> prepare("SELECT ? FROM game WHERE roomid = ?");
 	$q2-> execute(array("card".$user["turn"] ,$_REQUEST["roomid"]));
 	$r2 = $q2->fetch();
 	if(!($r2)){
