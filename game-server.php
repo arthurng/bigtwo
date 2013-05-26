@@ -18,6 +18,20 @@ $current = $r['turn'];
 // client submit his name
 $instance = $_REQUEST['player'];
 
+////function collections////
+
+function confirm(){
+	$hand = $_REQUEST['hand'];//$hand is a string
+	if(checkLogic($hand)==true){return 1;}//return true for ajax
+	else{return -1;}
+}
+
+function pass(){
+	$r = fetchLast();
+	saveNewHand($r, 'PASS');
+	return 1;
+}
+
 function printToLog($str){
 	// Comment out to disable
 	// error_log($str);

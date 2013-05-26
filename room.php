@@ -184,17 +184,18 @@
 	}
 	
 	function confirmFire(){
-		joinedHand = hand.join('-');
-		data="roomid=<?php echo $roomid; ?>" + '&action=confirm' + '&hand=' + joinedHand;
+		joinedHand = hand.join(',');
+		player = id2player(index);
+		data="roomid=<?php echo $roomid; ?>" + '&action=confirm' + '&hand=' + joinedHand + '&player=' + player;
 		$.ajax({
-			url: "room-process.php",
+			url: "game-server.php",
 			type: 'POST',
-			data: data 
+			data: data
 		}).done(function(validity){
-			if(validity==-1){
-				$('systemMessage').text('Your hand has some problem. Please choose again.');
-			}else if(validity==1){
-				$('systemMessage').text('Okay. Next user.');
+			if(validity==1){
+				$('#systemMessage').text('Okay. Next user.');
+			}else{
+				$('#systemMessage').text('Your hand has some problem. Please choose again.');
 			}
 			
 			//initiate longpoll(slave)
@@ -204,10 +205,13 @@
 	function passFire(){
 		data="roomid=<?php echo $roomid; ?>" + '&action=pass';
 		$.ajax({
-			url: "room-process.php",
+			url: "game-server.php",
 			type: 'POST',
 			data: data 
-		}).done(function(){
+		}).done(function(validity){
+			if(validity==1){
+				$('#systemMessage').text('Okay you passed. Next user.');
+			}
 			//initiate longpoll(slave)
 		});
 	}
