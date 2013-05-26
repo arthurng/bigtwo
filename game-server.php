@@ -1,5 +1,5 @@
 <?php
-/* -------------------------------------------------*/ error_log("arrived");
+/* -------------------------------------------------*/ printToLog("arrived");
 // include the hand-logic
 require 'hand-logic.php';
 // hand roomid player
@@ -18,27 +18,32 @@ $current = $r['turn'];
 // client submit his name
 $instance = $_REQUEST['player'];
 
+function printToLog($str){
+	// Comment out to disable
+	// error_log($str);
+}
+
 function checking(){
 	global $current, $instance, $roomid;
-	/* -------------------------------------------------*/ error_log("running checking function");
-	/* -------------------------------------------------*/ error_log("sending the hand: " . $_REQUEST["hand"]);
+	/* -------------------------------------------------*/ printToLog("running checking function");
+	/* -------------------------------------------------*/ printToLog("sending the hand: " . $_REQUEST["hand"]);
 	if ($current != $instance) return 'false';
 	$hand = $_REQUEST['hand'];
 	// $hand = explode(',', $_REQUEST['hand']);
 
 	// Call checkLogic in hand-logic.php
 	$validity  = checkLogic($hand);
-	/* -------------------------------------------------*/ error_log("checking finished, return: " . $validity);
+	/* -------------------------------------------------*/ printToLog("checking finished, return: " . $validity);
 
 	// Handle two cases for validity
 	if ($validity){
 		setSession("done", 1);
 		setSession("hand", $_REQUEST["hand"]);
-		/* -------------------------------------------------*/ error_log("returning true to call");
+		/* -------------------------------------------------*/ printToLog("returning true to call");
 		return 'true';
 	} else {
 		setSession("hand", null);
-		/* -------------------------------------------------*/ error_log("returning false to call");
+		/* -------------------------------------------------*/ printToLog("returning false to call");
 		return 'false';
 	}
 }
@@ -50,10 +55,10 @@ function longpoll(){
 }
 
 function longpoll_master(){
-	/* -------------------------------------------------*/ error_log("MASTER: longpoll_master called");
+	/* -------------------------------------------------*/ printToLog("MASTER: longpoll_master called");
 	global $current, $instance, $roomid;
 
-	/* -------------------------------------------------*/ error_log("MASTER: Resetting variables");
+	/* -------------------------------------------------*/ printToLog("MASTER: Resetting variables");
 	// Save the beginning time of the Master poll & reset the session hand
 	$TOflag = 0;
 	$startTime = time();
@@ -64,7 +69,7 @@ function longpoll_master(){
 	setSession("ready", 1);
 	$increment = 0;
 
-	/* -------------------------------------------------*/ error_log("MASTER: Start loop to wait for TO or done");
+	/* -------------------------------------------------*/ printToLog("MASTER: Start loop to wait for TO or done");
 	// Loop to check the 'done' parameter (TOflag = Timeout flag)
 	do {
 		usleep(100000);
@@ -72,7 +77,7 @@ function longpoll_master(){
 
 		//testing flag -- display in error log
 		if ($curtime != time()){
-			error_log("TIME: " . $increment++);
+			printToLog("TIME: " . $increment++);
 			$curtime = time();
 		}
 		//testing flag -- display in error log
@@ -82,7 +87,7 @@ function longpoll_master(){
 		$e = getSession("done");
 	} while ($e != 1) ;
 
-	/* -------------------------------------------------*/ error_log("MASTER: Loop ended, update current user and preparing to end");
+	/* -------------------------------------------------*/ printToLog("MASTER: Loop ended, update current user and preparing to end");
 	switch ($current) {
 		case 'north':
 			$current = 'east';
@@ -105,36 +110,36 @@ function longpoll_master(){
 	$returnHand = getSession("hand");
 	setSession("ready", 0);
 
-	/* -------------------------------------------------*/ error_log("MASTER: Close connection and return hand");
-	/* -------------------------------------------------*/ error_log(print_r($returnHand, 1));
+	/* -------------------------------------------------*/ printToLog("MASTER: Close connection and return hand");
+	/* -------------------------------------------------*/ printToLog(print_r($returnHand, 1));
 	return array('status' => 'proceed', 'hand' => $returnHand);	
 }
 
 function longpoll_slave(){
-	/* -------------------------------------------------*/ error_log("SLAVE: longpoll_master called");
+	/* -------------------------------------------------*/ printToLog("SLAVE: longpoll_master called");
 	global $current, $instance, $roomid;
 	$roomSessId = 'GAMESESSION'.$roomid;
 	session_name($roomSessId);
 	
-	/* -------------------------------------------------*/ error_log("SLAVE: Loop to wait for the ready flag");
+	/* -------------------------------------------------*/ printToLog("SLAVE: Loop to wait for the ready flag");
 	do {
 		usleep(100000);
 		clearstatcache();		
 		$e = getSession("ready");
 	} while ($e != 1);
 
-	/* -------------------------------------------------*/ error_log("SLAVE: Start loop to wait for done: READY: ".$e);
+	/* -------------------------------------------------*/ printToLog("SLAVE: Start loop to wait for done: READY: ".$e);
 	do {
 		usleep(100000);
 		clearstatcache();
 		$e = getSession("done");
 	} while ($e != 1) ;
 
-	/* -------------------------------------------------*/ error_log("SLAVE: Loop ended, preparing to end");
+	/* -------------------------------------------------*/ printToLog("SLAVE: Loop ended, preparing to end");
 	// Read the session hand before return
 	$returnHand = getSession("hand");
 
-	/* -------------------------------------------------*/ error_log("SLAVE: Close connection and return hand");
+	/* -------------------------------------------------*/ printToLog("SLAVE: Close connection and return hand");
 	return array('status' => 'proceed', 'hand' => $returnHand);	
 }
 
