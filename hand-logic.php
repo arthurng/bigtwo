@@ -401,7 +401,7 @@ function checkValidity($handToCheck){
 	$q2 = $db -> prepare("SELECT ? FROM game WHERE roomid = ?");
 	$q2-> execute(array(("card".$user["turn"]) ,$_REQUEST["roomid"]));
 	$r2 = $q2->fetch();
-	$origHand = explode(",", $r2[("card".$user["turn"])]);
+	$origHand = explode(",", $r2[("cardwest"]);
 	// Check if the hand presents in the user's cards
 	$checkingArray = array_diff($origHand, $handToCheck);
 	if (empty($checkingArray)) return false;
