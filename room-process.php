@@ -214,7 +214,7 @@
 		$r = $q->fetch();
 		if($r == null){
 			$q = $db -> prepare("INSERT INTO game (sessionid,roomid,cardnorth,cardeast,cardsouth,cardwest) VALUES(?,?)");
-			$q->execute(array($session,$roomid,0,0,0,0));
+			$q->execute(array($session,$roomid,'0','0','0','0'));
 		}
 		return true;
 	}
