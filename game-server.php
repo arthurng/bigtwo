@@ -23,7 +23,7 @@ function checking(){
 	/* -------------------------------------------------*/ error_log("running checking function");
 	/* -------------------------------------------------*/ error_log("sending the hand: " . $_REQUEST["hand"]);
 	if ($current != $instance) return 'false';
-	$hand = explode(',', $_REQUEST['hand']);
+	// $hand = explode(',', $_REQUEST['hand']);
 
 	// Call checkLogic in hand-logic.php
 	$validity  = checkLogic($hand);
