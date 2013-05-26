@@ -118,7 +118,7 @@ function fiveCard($cards){
 	
 	// 2. Validate and calculate the current hand	
 		// 2.4 For Straight Flush Case
-	if($prevHand[0] == 8 || $prevHand[0] < 8 ) {
+	if($prevHand[0] == 8 || $prevHand[0] < 8 || $prevHand[0] == "PASS") {
 		//Check the Flowers first LOL
 		if($cards[4]%4 == $cards[3]%4 && $cards[3]%4 == $cards[2]%4 && $cards[2]%4 == $cards[1]%4 && $cards[1]%4 == $cards[0]%4 && $cards[0]%4 == $cards[4]%4){
 			//Supposed the cards is from big to small
@@ -172,7 +172,7 @@ function fiveCard($cards){
 	
 		// 2.4 For Four of a Kind Case
 	four_kind:
-	if($prevHand[0] == 7 || $prevHand[0] < 7) {
+	if($prevHand[0] == 7 || $prevHand[0] < 7 || $prevHand[0] == "PASS") {
 		// For case like "66665"
 		if(ceil($cards[0]/4) == (ceil($cards[1]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[1]/4) == ceil($cards[2]/4) && ceil($cards[2]/4) == ceil($cards[3]/4)){
@@ -227,7 +227,7 @@ function fiveCard($cards){
 	
 		// 2.3 For Full House Case
 	full_house:
-	if($prevHand[0] == 6 || $prevHand[0] < 6) {
+	if($prevHand[0] == 6 || $prevHand[0] < 6 || $prevHand[0] == "PASS") {
 		// For case like "66655"
 		if(ceil($cards[1]/4) == (ceil($cards[2]/4))){
 			if(ceil($cards[0]/4) == ceil($cards[1]/4) && ceil($cards[3]/4) == ceil($cards[4]/4)){
@@ -282,7 +282,7 @@ function fiveCard($cards){
 
 		// 2.2 For Flush Case
 	flower:
-	if($prevHand[0] == 5 || $prevHand[0] < 5) {
+	if($prevHand[0] == 5 || $prevHand[0] < 5 || $prevHand[0] == "PASS") {
 		if($cards[4]%4 == $cards[3]%4 && $cards[3]%4 == $cards[2]%4 && $cards[2]%4 == $cards[1]%4 && $cards[1]%4 == $cards[0]%4 && $cards[0]%4 == $cards[4]%4){
 			$currentHand = array("5", max($cards));
 		}
@@ -320,7 +320,7 @@ function fiveCard($cards){
 	
 		// 2.1 For Straight Case
 	straight:
-	if($prevHand[0] == 4) {
+	if($prevHand[0] == 4 || $prevHand[0] == "PASS") {
 		//Supposed the cards is from big to small
 		//Ban "QKA23","KA234" these 3 cases, hardcoded LOL
 		if(ceil($cards[0]/4) == 13 && ceil($cards[1]/4) == 12 && ceil($cards[2]/4) == 11 && ceil($cards[3]/4) == 10 && ceil($cards[4]/4) == 1) {
@@ -393,8 +393,7 @@ function test(){
 		//$input = "52,48,43,40,34";
 		//$input = "52,48,44,40,36";	
 		//$input = "28,27,20,19,18";
-		//$input = "52,48,44,40,34";
-		$input = "52";
+		$input = "52,48,44,40,34";
 		$input = explode(",", $input);
 		$_REQUEST["roomid"] = 1;
 		if (checkLogic($input)) echo "It is valid.\n";
