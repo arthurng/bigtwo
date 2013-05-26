@@ -416,7 +416,7 @@ function test(){
 		//echo "Enter the hand: ";
 		//$input = fgets(STDIN);
 		//$input = mb_substr($input, 0, -1);
-		$input = "28,24,20,16,12";
+		//$input = "28,24,20,16,12";
 		//$input = "50,4,3,2,1";
 		//$input = "52,48,43,40,34";
 		//$input = "52,48,44,40,36";	
