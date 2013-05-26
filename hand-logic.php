@@ -404,6 +404,7 @@ function checkValidity($handToCheck){
 	//$origHand = explode(",", $r2);
 	// Check if the hand presents in the user's cards
 	$checkingArray = array_diff($r2, $handToCheck);
+	echo $checkingArray;
 	if (empty($checkingArray)) return false;
 	else {
 		$newHand = implode(",",array_diff($r2, $handToCheck));
