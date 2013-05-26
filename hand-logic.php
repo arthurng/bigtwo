@@ -471,7 +471,7 @@ function lastHandNotPass($r){
 	else if ($r["secondLast"] != "PASS") $o=$r["secondLast"];
 	else if ($r["thirdLast"] != "PASS") $o=$r["thirdLast"];
 	else $o = "PASS";
-	return split("-", $o);
+	return explode("-", $o);
 }
 
 function checkIfLastThreeIsPass($r){
@@ -490,16 +490,16 @@ function checkValidity($handToCheck){
 	$r2 = $q2->fetch();
 
 	//print_r($r2[("card".$user["turn"])]);
-	
 	$origHand = explode(",", $r2[("card".$user["turn"])]);
+	print_r($origHand);
 	// Check if the hand presents in the user's cards
-	$checkingArray = array_diff($origHand, $handToCheck);
-	if (count($checkingArray) != count($origHand) - count($handToCheck)) return false;
-	if (empty($checkingArray)) return false;
+	$checkingArray = array_diff($handToCheck, $origHand);
+	// if (count($checkingArray) != count($origHand) - count($handToCheck)) return false;
+	if (!empty($checkingArray)) return false;
 	else {
 		$newHand = implode(",",array_diff($origHand, $handToCheck));
-		echo $newHand;
-		echo "card".$user["turn"];
+		// echo $newHand;
+		// echo "card".$user["turn"];
 		$q3 = $db -> prepare("UPDATE game SET card".$user["turn"]." = ? WHERE roomid = ?");
 		$q3-> execute(array($newHand, $_REQUEST["roomid"]));
 		return true;
@@ -509,12 +509,12 @@ function checkValidity($handToCheck){
 }
 
 /* Debugging Section for Arthur */
-/*
+
 function test(){
 	//while(true){
-		//echo "Enter the hand: ";
-		//$input = fgets(STDIN);
-		//$input = mb_substr($input, 0, -1);
+		echo "Enter the hand: ";
+		$input = fgets(STDIN);
+		$input = mb_substr($input, 0, -1);
 		//$input = "28,24,20,16,12";
 		//$input = "50,4,3,2,1";
 		//$input = "52,48,43,40,34";
@@ -522,14 +522,13 @@ function test(){
 		//$input = "28,27,20,19,18";
 		//$input = "52,48,44,40,34";
 		//$input = "52,48,44,40,32";
-		$input = "32";
-		$input = explode(",", $input);
-		$_REQUEST["roomid"] = 1;
+		//$input = "32";
+		//$input = explode(",", $input);
+		$_REQUEST["roomid"] = 3;
 		if (checkLogic($input)) echo "It is valid.\n";
 		else echo "It is invalid.\n";
 	//}
 }
-test();
-*/
+//test();
 
 ?>
