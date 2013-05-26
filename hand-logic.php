@@ -11,6 +11,7 @@
 // Entry point to the logic: checkLogic($cards);
 // $cards is an array of strings.
 function checkLogic($cards){
+	$cards = explode(",", $cards);
 	switch (count($cards)){
 		case 1:
 			$validity = oneCard($cards);
@@ -380,6 +381,28 @@ function lastHandNotPass($r){
 function checkIfLastThreeIsPass($r){
 	if (($r["firstLast"]=="PASS") && ($r["secondLast"]=="PASS") && ($r["thirdLast"]=="PASS")) return true;
 	else return false;
+}
+
+function checkValidity($handToCheck){
+	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
+	$q = $db -> prepare("SELECT turn FROM user WHERE roomid = ?");
+	$q-> execute(array($_REQUEST["roomid"]));
+	$user = $q->fetch();
+	$q2 = $db -> prepare("SELECT ? FROM user WHERE roomid = ?");
+	$q-> execute(array("card".$user["turn"] ,$_REQUEST["roomid"]));
+	$r2 = $q2->fetch();
+	$origHand = explode(",", $r2);
+	// Check if the hand presents in the user's cards
+	$checkingArray = array_diff($handToCheck, $r2);
+	if (!empty($checkingArray)) return false;
+	else {
+		$newHand = implode(",",array_diff($r2, $handToCheck));
+		$q = $db -> prepare("UPDATE user SET ? = ? WHERE roomid = ?");
+		$q-> execute(array("card".$r["turn"] ,$newHand, $_REQUEST["roomid"]));
+		return true;
+	}
+	// if the function return false, then "hand-logic" should return false as the required cards are not held by the user
+	// if the function return ture, it means that the submission is valid and that the card(s) have been removed from the fielcd 
 }
 
 /* Debugging Section for Arthur */
