@@ -194,6 +194,9 @@
 		}).done(function(validity){
 			if(validity==1){
 				$('#systemMessage').text('Okay. Next user.');
+				for(var i=0; i<hand.length; i++)
+					//alert(eval("\"img[src$=\'cardsInNumber/"+hand[i]+".png\'][class=\'cards\']\""));
+					$(eval("\"img[src$=\'cardsInNumber/"+hand[i]+".png\'][class=\'cards\']\"")).remove();//remove img by pathname
 			}else{
 				$('#systemMessage').text('Your hand has some problem. Please choose again.');
 			}

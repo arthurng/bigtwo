@@ -22,7 +22,9 @@ $instance = $_REQUEST['player'];
 
 function confirm(){
 	$hand = $_REQUEST['hand'];//$hand is a string
-	if(checkLogic($hand)==true){return 1;}//return true for ajax
+	if(checkLogic($hand)==true){
+		return 1;
+	}//return true for ajax
 	else{return -1;}
 }
 
