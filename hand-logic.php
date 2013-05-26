@@ -480,26 +480,20 @@ function checkIfLastThreeIsPass($r){
 }
 
 function checkValidity($handToCheck){
+	// Preparation
 	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
-	$q = $db -> prepare("SELECT turn FROM game WHERE roomid = ?");
+	$q = $db -> prepare("SELECT * FROM game WHERE roomid = ?");
 	$q-> execute(array($_REQUEST["roomid"]));
 	$user = $q->fetch();
-	
-	$q2 = $db -> prepare("SELECT * FROM game WHERE roomid = ?");
-	$q2-> execute(array($_REQUEST["roomid"]));
-	$r2 = $q2->fetch();
+	$origHand = explode(",", $user[("card".$user["turn"])]);
 
-	//print_r($r2[("card".$user["turn"])]);
-	$origHand = explode(",", $r2[("card".$user["turn"])]);
-	print_r($origHand);
 	// Check if the hand presents in the user's cards
 	$checkingArray = array_diff($handToCheck, $origHand);
-	// if (count($checkingArray) != count($origHand) - count($handToCheck)) return false;
+
+	// return false if the cards do not belong to the player
 	if (!empty($checkingArray)) return false;
 	else {
 		$newHand = implode(",",array_diff($origHand, $handToCheck));
-		// echo $newHand;
-		// echo "card".$user["turn"];
 		$q3 = $db -> prepare("UPDATE game SET card".$user["turn"]." = ? WHERE roomid = ?");
 		$q3-> execute(array($newHand, $_REQUEST["roomid"]));
 		return true;
