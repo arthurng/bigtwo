@@ -83,6 +83,19 @@
 				margin-left: -70px;
 				z-index: 2;
 			}
+
+			.cardsCenter{
+				width:100px;
+				position:fixed;
+				left: 10px;
+				top: 10px;
+				z-index: 2;
+			}
+
+			.currentPlayer{
+				color: yellow;
+			}
+
 		</style>
 	</head>
 	<body>
@@ -122,10 +135,12 @@
 	</body>
 	
 	<script src="incl/jquery.js"></script>
+	<script type="text/javascript" src="endgame.js"></script>
 	<script>
 	var playerid;
 	var checkEnd;
 	var hand = new Array();
+	var currentPlayer, myPosition;
 	
 	// Print player's cards
 	function showDeck(){	
@@ -161,7 +176,7 @@
 			
 			// Print cards
 			for(var i=0; i < show.length; i++){
-				var img = $("<img class=cards id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
+				var img = $("<img class='cards card"+show[i]+"' id=player"+index+"card"+i+" src=cardsInNumber/"+show[i]+".png>");
 				$("#player"+index).append(img);
 				$(img).click(function(e){select(e);});
 			}
@@ -170,10 +185,11 @@
 			confirm = $('<br><button type="button">Confirm</button>');
 			pass = $('<button type="button">Pass</button>');
 			$(confirm).attr('onclick', 'confirmFire();');
-			$(pass).attr('onclick', 'passFire();');
+			$(pass).attr('onclick', 'pass();');
 			$('.bottom').append(confirm);
 			$('.bottom').append(pass);
-			
+			getCurrentPlayer();
+			fire_longpoll();
 			// Check game End
 			checkEnd = setInterval(function(){
 				checkGameEnd();
@@ -247,6 +263,8 @@
 	function getSeat(){
 		leaveSeat();		
 		var data = $("form").serialize();
+		myPosition = $('#seatForm :checked').val(); // Arthur's
+		myPosition = id2player(myPosition); // Arthur's
 		data+="&roomid=<?php echo $roomid; ?>" + '&action=getSeat';
 		$.ajax({
 			url: "room-process.php",
@@ -354,7 +372,7 @@
 			type: 'POST',
 			data: data 
 		}).done(function(result){
-			// Not Implemented yet
+			if (result) endGame("<?php echo $roomid; ?>");
 			console.log('Still playing...');
 		});
 		return false;
@@ -425,5 +443,104 @@
 		}
 		return player;
 	}
+
+	function player2id(player){
+		switch(player){
+			case "north":
+				player = '0';
+				break;
+			case "south":
+				player = '1';
+				break;
+			case "east":
+				player = '2';
+				break;
+			case "west":
+				player = '3';
+				break;
+			default:
+				player = 'Invalid';
+				break;
+		}
+		return player;
+	}
+
+
+	// Arthur's ---------------------below---------------------
+	// This function should be called first
+	function getCurrentPlayer(){
+		$.ajax({
+			url: "room-process.php",
+			type: "POST",
+			data: {
+				roomid: '<?php echo $roomid; ?>'
+			}
+		}).done(function(e){
+			currentPlayer = e;
+		});
+	}
+
+	function addHighlight(){
+		var playerid = player2id(currentPlayer);
+		$("#player"+playerid).addClass("currentPlayer");
+	}
+
+	function removeHighlight(){
+		playerid = player2id(currentPlayer);
+		$("#player"+playerid).removeClass("currentPlayer");
+	}
+
+	function updateCards(cards){
+		for (ind in cards){
+			$(".card"+cards[ind]).removeClass('cards').addClass('cardsCenter');
+		}
+	}
+
+	checkIfEndGame(){
+		console.log("Not Implemented Error");
+	}
+
+	function pass(){
+		$.ajax({
+			url: "game-server.php",
+			type: "POST",
+			data: {
+				action: 'pass',
+				roomid: '<?php echo $roomid; ?>',
+				player: myPosition,
+			}
+		});		
+	}
+
+	function fire_longpoll(){
+		console.log("longpoll " + myPosition + " -> started");
+		$.ajax({
+			url: "game-server.php",
+			type: "POST",
+			data: {
+				action: 'longpoll',
+				roomid: '<?php echo $roomid; ?>',
+				player: myPosition,
+			}
+		}).done(function(e){
+			removeHighlight();
+			currentPlayer = switchPlayer(currentPlayer);
+			updateCards(e["hand"]);
+			addHighlight();
+			setTimeout(function(){
+				fire_longpoll();
+			}, 1000);
+		});
+	}
+
+	function switchPlayer(curr){
+		switch(curr){
+			case "north":	return "east";
+			case "east":	return "south";
+			case "south":	return "west";
+			case "west":	return "north";
+		}
+	}
+
 	</script>
 </html>

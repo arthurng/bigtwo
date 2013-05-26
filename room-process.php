@@ -175,9 +175,9 @@ include("hand-logic.php");
 		
 		// When one of the players played all cards
 		if($r['cardnorth'] == null || $r['cardeast'] == null || $r['cardsouth'] == null || $r['cardwest'] == null){
-		
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	// Get current game session for debugging
@@ -287,6 +287,16 @@ include("hand-logic.php");
 	function base64_url_decode($input) {
 	  return base64_decode(strtr($input, '-_', '+/'));
 	}
+
+	function getCurrentPlayer(){
+		global $db;
+		$roomid = (int)$_POST['roomid'];
+		$q = $db -> prepare("SELECT turn FROM game WHERE roomid = ? LIMIT 1");
+		$q->execute(array($roomid));
+		$r = $q->fetch();
+		return $r["turn"];
+	}
+
 
 header('Content-Type: application/json');
 // Input validation

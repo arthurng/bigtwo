@@ -64,6 +64,18 @@ function checking(){
 	}
 }
 
+function pass(){
+	global $current, $instance, $roomid;
+	/* -------------------------------------------------*/ printToLog("running pass function");
+
+	$r = fetchLast();
+	$newHand = "PASS";
+	saveNewHand($r, $newHand);
+
+	setSession("done", 1);
+	return 'true';
+}
+
 function longpoll(){
 	global $current, $instance, $roomid;
 	if ($current == $instance) return longpoll_master();
