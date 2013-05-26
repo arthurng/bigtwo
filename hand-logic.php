@@ -43,15 +43,21 @@ function oneCard($cards){
 
 	// 3. Check if "passed three times"
 	if (checkIfLastThreeIsPass($r)) {
-		saveNewHand($r, join("-", $currentHand));
-		return true;
+		if(checkValidity($cards)){
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		else return false;
 	}
 
 	// 4. Chech if the hand is larger than the previous
 	if ($currentHand[1] <= $prevHand[1]) return false;
 	else {
-		saveNewHand($r, join("-", $currentHand));
-		return true;
+		if(checkValidity($cards)){
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		else return false;
 	}
 }
 
@@ -70,15 +76,25 @@ function twoCard($cards){
 
 	// 3. Check if "passed three times"
 	if (checkIfLastThreeIsPass($r)) {
-		saveNewHand($r, join("-", $currentHand));
-		return true;
+		if(checkValidity($cards)){
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	// 4. Chech if the hand is larger than the previous
 	if ($currentHand[1] <= $prevHand[1]) return false;
 	else {
-		saveNewHand($r, join("-", $currentHand));
-		return true;
+		if(checkValidity($cards)){
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
 
@@ -97,15 +113,25 @@ function threeCard($cards){
 
 	// 3. Check if "passed three times"
 	if (checkIfLastThreeIsPass($r)) {
-		saveNewHand($r, join("-", $currentHand));
-		return true;
+		if(checkValidity($cards)){
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	// 4. Chech if the hand is larger than the previous
 	if ($currentHand[1] <= $prevHand[1]) return false;
 	else {
-		saveNewHand($r, join("-", $currentHand));
-		return true;
+		if(checkValidity($cards)){
+			saveNewHand($r, join("-", $currentHand));
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
 
@@ -141,19 +167,34 @@ function fiveCard($cards){
 			
 			// 2.1.1 Check if "passed three times"
 			if (checkIfLastThreeIsPass($r)) {
-				saveNewHand($r, join("-", $currentHand));
-				return true;
+				if(checkValidity($cards)){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			
 			// 2.1.2 Chech if the hand is larger than the previous
 			if($currentHand[0] > $prevHand[0]) {
-				saveNewHand($r, join("-", $currentHand));
-				return true;
+				if(checkValidity($cards)){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else if ($currentHand[0] == $prevHand[0]) {
 				if($currentHand[1] > $prevHand[1]){
-					saveNewHand($r, join("-", $currentHand));
-					return true;
+					if(checkValidity($cards)){
+						saveNewHand($r, join("-", $currentHand));
+						return true;
+					}
+					else{
+						return false;
+					}
 				}
 				else {
 					goto four_kind;
@@ -201,19 +242,34 @@ function fiveCard($cards){
 		
 		// 2.4.1 Check if "passed three times"
 		if (checkIfLastThreeIsPass($r)) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		
 		// 2.4.2 Chech if the hand is larger than the previous
 		if($currentHand[0] > $prevHand[0]) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 		else if ($currentHand[0] == $prevHand[0]) {
 			if($currentHand[1] > $prevHand[1]){
-				saveNewHand($r, join("-", $currentHand));
-				return true;
+				if(checkValidity($cards)){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
 				goto full_house;
@@ -256,19 +312,34 @@ function fiveCard($cards){
 		
 		// 2.3.1 Check if "passed three times"
 		if (checkIfLastThreeIsPass($r)) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		
 		// 2.3.2 Chech if the hand is larger than the previous
 		if($currentHand[0] > $prevHand[0]) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else if ($currentHand[0] == $prevHand[0]) {
 			if($currentHand[1] > $prevHand[1]){
-				saveNewHand($r, join("-", $currentHand));
-				return true;
+				if(checkValidity($cards)){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
 				goto flower;
@@ -294,19 +365,34 @@ function fiveCard($cards){
 		
 		// 2.2.1 Check if "passed three times"
 		if (checkIfLastThreeIsPass($r)) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		
 		// 2.2.2 Chech if the hand is larger than the previous
 		if($currentHand[0] > $prevHand[0]) {
-			saveNewHand($r, join("-", $currentHand));
-			return true;
+			if(checkValidity($cards)){
+				saveNewHand($r, join("-", $currentHand));
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 		else if ($currentHand[0] == $prevHand[0]) {
 			if($currentHand[1] > $prevHand[1]){
-				saveNewHand($r, join("-", $currentHand));
-				return true;
+				if(checkValidity($cards)){
+					saveNewHand($r, join("-", $currentHand));
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
 				goto straight;
@@ -399,21 +485,23 @@ function checkValidity($handToCheck){
 	$q-> execute(array($_REQUEST["roomid"]));
 	$user = $q->fetch();
 	
-	$q2 = $db -> prepare("SELECT ? FROM game WHERE roomid = ?");
-	$q2-> execute(array(("card".$user["turn"]) ,$_REQUEST["roomid"]));
-	$r2 = $q2->fetch(PDO::FETCH_ASSOC);
+	$q2 = $db -> prepare("SELECT * FROM game WHERE roomid = ?");
+	$q2-> execute(array($_REQUEST["roomid"]));
+	$r2 = $q2->fetch();
 
-	print_r($r2);
+	//print_r($r2[("card".$user["turn"])]);
 	
-	$origHand = explode(",", $r2[("cardwest")]);
+	$origHand = explode(",", $r2[("card".$user["turn"])]);
 	// Check if the hand presents in the user's cards
 	$checkingArray = array_diff($origHand, $handToCheck);
+	if (count($checkingArray) != count($origHand) - count($handToCheck)) return false;
 	if (empty($checkingArray)) return false;
 	else {
 		$newHand = implode(",",array_diff($origHand, $handToCheck));
 		echo $newHand;
-		$q3 = $db -> prepare("UPDATE game SET ? = ? WHERE roomid = ?");
-		$q3-> execute(array(("card".$user["turn"]) ,$newHand, $_REQUEST["roomid"]));
+		echo "card".$user["turn"];
+		$q3 = $db -> prepare("UPDATE game SET card".$user["turn"]." = ? WHERE roomid = ?");
+		$q3-> execute(array($newHand, $_REQUEST["roomid"]));
 		return true;
 	}
 	// if the function return false, then "hand-logic" should return false as the required cards are not held by the user
@@ -432,8 +520,9 @@ function test(){
 		//$input = "52,48,43,40,34";
 		//$input = "52,48,44,40,36";	
 		//$input = "28,27,20,19,18";
-		$input = "52,48,44,40,34";
+		//$input = "52,48,44,40,34";
 		//$input = "52,48,44,40,32";
+		$input = "32";
 		$input = explode(",", $input);
 		$_REQUEST["roomid"] = 1;
 		if (checkLogic($input)) echo "It is valid.\n";
