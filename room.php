@@ -187,7 +187,7 @@
 			confirm = $('<br><button type="button">Confirm</button>');
 			pass = $('<button type="button">Pass</button>');
 			$(confirm).attr('onclick', 'fire_checking();');
-			$(pass).attr('onclick', 'pass();');
+			$(pass).attr('onclick', 'fire_pass();');
 			$('.bottom').append(confirm);
 			$('.bottom').append(pass);
 			
@@ -510,9 +510,11 @@
 	}
 
 	function updateCards(cards){
-		var array_cards = cards.split(",");
-		for (ind in array_cards){
-			$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter');
+		if(cards) {
+			var array_cards = cards.split(",");
+			for (ind in array_cards){
+				$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter');
+			}
 		}
 	}
 
@@ -529,7 +531,7 @@
 				player: myPosition
 			}
 		}).done(function(validity){
-			if(validity == true){
+			if(validity == 'true'){
 				console.log("the hand is valid");
 			}else{
 				console.log("the hand is NOT valid");
@@ -539,14 +541,21 @@
 		});
 	}
 
-	function pass(){
+	function fire_pass(){
+		player = id2player(index);
 		$.ajax({
 			url: "game-server.php",
-			type: "POST",
+			type: 'POST',
 			data: {
-				action: 'pass',
+				action: "pass",
 				roomid: '<?php echo $roomid; ?>',
-				player: myPosition,
+				player: myPosition
+			}
+		}).done(function(validity){
+			if(validity == 'true'){
+				console.log("Can Pass");
+			}else{
+				console.log("Can't Pass");
 			}
 		});		
 	}
