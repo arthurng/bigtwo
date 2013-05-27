@@ -69,7 +69,8 @@ function checking(){
 function pass(){
 	global $current, $instance, $roomid;
 	/* -------------------------------------------------*/ printToLog("running pass function");
-
+	if ($current != $instance) return 'false';
+	
 	$r = fetchLast();
 	$newHand = "PASS";
 	saveNewHand($r, $newHand);
