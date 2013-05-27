@@ -85,8 +85,8 @@ function longpoll(){
 	}
 	else {	
 		$temp = longpoll_slave();
-		error_log("The slave call has been return to the main");
-		error_log(print_r($temp, 1));
+		//error_log("The slave call has been return to the main");
+		//error_log(print_r($temp, 1));
 		return $temp;
 	}
 }
@@ -148,7 +148,7 @@ function longpoll_master(){
 	setSession("ready", 0);
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Close connection and return hand");
-	/* -------------------------------------------------*/ printToLog(print_r($returnHand, 1));
+	/* -------------------------------------------------*/ // printToLog(print_r($returnHand, 1));
 	return array('status' => 'mastered', 'hand' => $returnHand);	
 }
 
@@ -196,4 +196,6 @@ function setSession($name, $value){
 }
 
 header('Content-Type: application/json');
-echo json_encode(call_user_func($_REQUEST['action']));
+$return = json_encode(call_user_func($_REQUEST['action']));
+error_log(print_r($return, 1));
+print_r($return);
