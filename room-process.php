@@ -294,10 +294,15 @@ include("hand-logic.php");
 		$q = $db -> prepare("SELECT turn FROM game WHERE roomid = ? LIMIT 1");
 		$q->execute(array($roomid));
 		$r = $q->fetch();
+		error_log(print_r($r,1));
 		return $r["turn"];
 	}
 
+header('Content-Type: application/json');
+$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
+echo json_encode(call_user_func($_REQUEST['action']));
 
+/*
 header('Content-Type: application/json');
 // Input validation
 if (empty($_REQUEST['action']) || !preg_match('/^\w+$/', $_REQUEST['action'])) {
@@ -322,4 +327,5 @@ try {
 } catch(Exception $e) {
 	echo json_encode('Failed: '.$e->getMessage());
 }
+*/
 ?>

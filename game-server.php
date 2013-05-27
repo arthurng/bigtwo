@@ -19,7 +19,7 @@ $current = $r['turn'];
 $instance = $_REQUEST['player'];
 
 ////function collections////
-
+/*
 function confirm(){
 	$hand = $_REQUEST['hand'];//$hand is a string
 	if(checkLogic($hand)==true){
@@ -33,10 +33,10 @@ function pass(){
 	saveNewHand($r, 'PASS');
 	return 1;
 }
-
+*/
 function printToLog($str){
 	// Comment out to disable
-	// error_log($str);
+	error_log($str);
 }
 
 function checking(){
@@ -78,8 +78,17 @@ function pass(){
 
 function longpoll(){
 	global $current, $instance, $roomid;
-	if ($current == $instance) return longpoll_master();
-	else return longpoll_slave();
+	printToLog("The current is: ".$current." and the instance is from: ".$instance);
+	if ($current == $instance){
+		$temp = longpoll_master();
+		return $temp;
+	}
+	else {	
+		$temp = longpoll_slave();
+		error_log("The slave call has been return to the main");
+		error_log(print_r($temp, 1));
+		return $temp;
+	}
 }
 
 function longpoll_master(){
@@ -110,7 +119,7 @@ function longpoll_master(){
 		}
 		//testing flag -- display in error log
 
-		if ($startTime+20 <= time()) $TOflag = 1;
+		if ($startTime+5 <= time()) $TOflag = 1;
 		if ($TOflag) setSession("done", 1);
 		$e = getSession("done");
 	} while ($e != 1) ;
@@ -140,23 +149,23 @@ function longpoll_master(){
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Close connection and return hand");
 	/* -------------------------------------------------*/ printToLog(print_r($returnHand, 1));
-	return array('status' => 'proceed', 'hand' => $returnHand);	
+	return array('status' => 'mastered', 'hand' => $returnHand);	
 }
 
 function longpoll_slave(){
-	/* -------------------------------------------------*/ printToLog("SLAVE: longpoll_master called");
+	/* -------------------------------------------------*/ printToLog("SLAVE: longpoll_slave called");
 	global $current, $instance, $roomid;
 	$roomSessId = 'GAMESESSION'.$roomid;
 	session_name($roomSessId);
 	
 	/* -------------------------------------------------*/ printToLog("SLAVE: Loop to wait for the ready flag");
 	do {
-		usleep(100000);
+		usleep(200000);
 		clearstatcache();		
 		$e = getSession("ready");
 	} while ($e != 1);
 
-	/* -------------------------------------------------*/ printToLog("SLAVE: Start loop to wait for done: READY: ".$e);
+	/* -------------------------------------------------*/ printToLog("SLAVE: Start loop to wait for done: READY= 1");
 	do {
 		usleep(100000);
 		clearstatcache();
@@ -168,7 +177,8 @@ function longpoll_slave(){
 	$returnHand = getSession("hand");
 
 	/* -------------------------------------------------*/ printToLog("SLAVE: Close connection and return hand");
-	return array('status' => 'proceed', 'hand' => $returnHand);	
+	// return 'true';
+	return array('status' => 'slaved', 'hand' => $returnHand);	
 }
 
 function getSession($name){
