@@ -510,8 +510,9 @@
 	}
 
 	function updateCards(cards){
-		for (ind in cards){
-			$(".card"+cards[ind]).removeClass('cards').addClass('cardsCenter');
+		var array_cards = cards.split(",");
+		for (ind in array_cards){
+			$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter');
 		}
 	}
 
