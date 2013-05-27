@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 /* -------------------------------------------------*/ printToLog("arrived");
 // include the hand-logic
 require 'hand-logic.php';
@@ -108,6 +110,7 @@ function longpoll_master(){
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Start loop to wait for TO or done");
 	// Loop to check the 'done' parameter (TOflag = Timeout flag)
+	error_log("Ready Session = ".getSession("ready"));
 	do {
 		usleep(100000);
 		clearstatcache();
@@ -160,6 +163,7 @@ function longpoll_slave(){
 	
 	/* -------------------------------------------------*/ printToLog("SLAVE: Loop to wait for the ready flag");
 	do {
+		error_log("loop 1 of instance: ".$instance);
 		usleep(200000);
 		clearstatcache();		
 		$e = getSession("ready");
@@ -167,6 +171,7 @@ function longpoll_slave(){
 
 	/* -------------------------------------------------*/ printToLog("SLAVE: Start loop to wait for done: READY= 1");
 	do {
+		error_log("loop 2 of instance: ".$instance);		
 		usleep(100000);
 		clearstatcache();
 		$e = getSession("done");
@@ -198,4 +203,6 @@ function setSession($name, $value){
 header('Content-Type: application/json');
 $return = json_encode(call_user_func($_REQUEST['action']));
 error_log(print_r($return, 1));
-print_r($return);
+error_log("Client responsible: ".$instance);
+echo $return;
+exit(0);
