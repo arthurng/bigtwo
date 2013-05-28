@@ -140,6 +140,7 @@
 	<script src="incl/jquery.js"></script>
 	<script type="text/javascript" src="endgame.js"></script>
 	<script>
+	var global_z_index = 100;
 	var playerid;
 	var checkEnd;
 	var hand = new Array();
@@ -459,16 +460,17 @@
 	}
 
 	function updateCards(cards){
+		global_z_index++;
 		if(cards) {
 			var array_cards = cards.split(","), offset = 10;
-			$(".classCenter").removeClass(".classCenter").addClass("cardsHidden");
+			$(".cardsCenter").removeClass(".cardsCenter").addClass("cardsHidden");
 			for (ind in array_cards){
 				if(($(".card"+array_cards[ind]).length) != 0) {
-					$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter').off("click").css("left", offset+"px");
+					$(".card"+array_cards[ind]).removeClass('cards').removeClass('cards'+array_cards[ind]+'').addClass('cardsCenter').off("click").css("left", offset+"px").css("z-index", "global_z_index");
 					hand.splice(hand.indexOf(array_cards[ind]), 1);
 				}
 				else {
-					var img = $("<img src=cardsInNumber/"+array_cards[ind]+".png>").addClass("cardsCenter").css("left", offset+"px");
+					var img = $("<img src=cardsInNumber/"+array_cards[ind]+".png>").addClass("cardsCenter").css("left", offset+"px").css("z-index", "global_z_index");
 					$("#playground").append(img);
 				}
 				offset += 100;
