@@ -41,7 +41,7 @@
 		for ($x=1; $x<4; $x++){
 			if (count($rank[$x])>1){
 				foreach(array_reverse($rank[$x]) as $i){
-					if ($rank[$x+1] == null) $rank[$x+1] = [];
+					if ($rank[$x+1] == null) $rank[$x+1] = array();
 					array_unshift($rank[$x+1], $i);
 					array_pop($rank[$x]);
 					error_log(print_r($rank[$x+1],1));
@@ -62,10 +62,6 @@
 			"second" => $rank[2],
 			"third" => $rank[3],
 			"forth" => $rank[4],
-//			"north" => $r["north"],
-//			"east" => $r["east"],
-//			"south" => $r["south"],
-//			"west" => $r["west"],
 			"countnorth" => count($north), 
 			"counteast" => count($east), 
 			"countsouth" => count($south), 

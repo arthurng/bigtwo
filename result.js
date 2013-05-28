@@ -27,6 +27,10 @@ function updateDisplay(e){
 	$(function () {
 	    var ctr = $("#scoreChange"), clr = null;
 		var curr = parseInt(e[e["position"]][0]["score"]);
+		if (parseInt(e["score"]) == 0){
+			ctr.html(curr);
+			return;	
+		}
 	    function addition() {
 	        ctr.html(curr += 1);
 	        if (curr == parseInt(e[e["position"]][0]["score"]) + parseInt(e["score"])) {
