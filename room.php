@@ -467,7 +467,14 @@
 		if(cards) {
 			var array_cards = cards.split(",");
 			for (ind in array_cards){
-				$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter');
+				if(($(".card"+array_cards[ind]).length) != 0) {
+					$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter');
+				}
+				else {
+
+					var img = $("<img class='cardsCenter' src=cardsInNumber/"+array_cards[ind]+".png>");
+					$("#playground").append(img);
+				}
 			}
 		}
 	}
@@ -485,7 +492,7 @@
 				player: myPosition
 			}
 		}).done(function(validity){
-			if(validity == 'true'){
+			if(validity == true){
 				console.log("the hand is valid");
 			}else{
 				console.log("the hand is NOT valid");
