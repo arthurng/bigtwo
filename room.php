@@ -87,9 +87,12 @@
 			.cardsCenter{
 				width:100px;
 				position:fixed;
-				left: 10px;
 				top: 10px;
 				z-index: 2;
+			}
+
+			.cardsHidden{
+				display: none;
 			}
 
 			.currentPlayer{
@@ -457,16 +460,18 @@
 
 	function updateCards(cards){
 		if(cards) {
-			var array_cards = cards.split(",");
+			var array_cards = cards.split(","), offset = 10;
+			$(".classCenter").removeClass(".classCenter").addClass("cardsHidden");
 			for (ind in array_cards){
 				if(($(".card"+array_cards[ind]).length) != 0) {
-					$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter').click();
+					$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter').off("click").css("left", offset+"px");
+					hand.splice(hand.indexOf(array_cards[ind]), 1);
 				}
 				else {
-
-					var img = $("<img class='cardsCenter' src=cardsInNumber/"+array_cards[ind]+".png>");
+					var img = $("<img src=cardsInNumber/"+array_cards[ind]+".png>").addClass("cardsCenter").css("left", offset+"px");
 					$("#playground").append(img);
 				}
+				offset += 100;
 			}
 		}
 	}
@@ -484,7 +489,7 @@
 				player: myPosition
 			}
 		}).done(function(validity){
-			if(validity == true){
+			if(validity == 'true'){
 				console.log("the hand is valid");
 			}else{
 				console.log("the hand is NOT valid");

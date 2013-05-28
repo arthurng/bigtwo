@@ -42,8 +42,9 @@
 			if (count($rank[$x])>1){
 				foreach(array_reverse($rank[$x]) as $i){
 					if ($rank[$x+1] == null) $rank[$x+1] = [];
-					array_push($rank[4], $i);
+					array_unshift($rank[$x+1], $i);
 					array_pop($rank[$x]);
+					error_log(print_r($rank[$x+1],1));
 					if (count($rank[$x])==1) break; 
 				}
 			}
