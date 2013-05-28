@@ -1,6 +1,6 @@
 <?php
 
-include("hand-logic.php");
+//include("hand-logic.php");
 
 	function shuffleCards($cardNum,$roomid){
 		$cardNum = (int)$cardNum;

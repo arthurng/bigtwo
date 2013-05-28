@@ -181,15 +181,6 @@
 				$("#player"+index).append(img);
 				$(img).click(function(e){select(e);});
 			}
-
-
-			// push the confirm and pass button
-			confirm = $('<br><button type="button">Confirm</button>');
-			pass = $('<button type="button">Pass</button>');
-			$(confirm).attr('onclick', 'fire_checking();');
-			$(pass).attr('onclick', 'fire_pass();');
-			$('.bottom').append(confirm);
-			$('.bottom').append(pass);
 			
 			fire_longpoll();
 
@@ -204,44 +195,7 @@
 		});
 		return false;
 	}
-	
-/*
-	function confirmFire(){
-		joinedHand = hand.join(',');
-		player = id2player(index);
-		data="roomid=<?php echo $roomid; ?>" + '&action=confirm' + '&hand=' + joinedHand + '&player=' + player;
-		$.ajax({
-			url: "game-server.php",
-			type: 'POST',
-			data: data
-		}).done(function(validity){
-			if(validity==1){
-				$('#systemMessage').text('Okay. Next user.');
-				for(var i=0; i<hand.length; i++)
-					//alert(eval("\"img[src$=\'cardsInNumber/"+hand[i]+".png\'][class=\'cards\']\""));
-					$(eval("\"img[src$=\'cardsInNumber/"+hand[i]+".png\'][class=\'cards\']\"")).remove();//remove img by pathname
-			}else{
-				$('#systemMessage').text('Your hand has some problem. Please choose again.');
-			}
-			
-			//initiate longpoll(slave)
-		});
-	}
 
-	function passFire(){
-		data="roomid=<?php echo $roomid; ?>" + '&action=pass';
-		$.ajax({
-			url: "game-server.php",
-			type: 'POST',
-			data: data 
-		}).done(function(validity){
-			if(validity==1){
-				$('#systemMessage').text('Okay you passed. Next user.');
-			}
-			//initiate longpoll(slave)
-		});
-	}
-*/
 	function select(e){
 		e.stopPropagation();
 		// console.log(e);
@@ -454,7 +408,7 @@
 				player = 'West';
 				break;
 			default:
-				player = 'Invalid';
+				getCurrentPlayer();
 				break;
 		}
 		return player;
@@ -475,7 +429,7 @@
 				player = '3';
 				break;
 			default:
-				player = 'Invalid';
+				getCurrentPlayer();
 				break;
 		}
 		return player;
@@ -536,8 +490,6 @@
 			}else{
 				console.log("the hand is NOT valid");
 			}
-			
-			//initiate longpoll(slave)
 		});
 	}
 
@@ -571,18 +523,48 @@
 				player: myPosition
 			}
 		}).always(function(e){
+			disableButtons();
 			console.log("longpoll " + myPosition + " -> terminated");
 			console.log(e);
 			removeHighlight();
 			currentPlayer = switchPlayer(currentPlayer);
 			updateCards(e["hand"]);
 			addHighlight();
+			console.log("---Timeout 2 seconds to for propagation")
 			setTimeout(function(){
 				console.log("Everything should have finished, now starting another longpoll now.")
+				enableButtons();
 				fire_longpoll();
 			},2000);
 		});
 	}
+
+	function enableButtons(){
+		if (currentPlayer == myPosition){
+			$confirm = $('<br><button type="button">Confirm</button>')
+				.attr('id', 'confirmButton')
+				.click(function(){
+					fire_checking();
+				});
+			$pass = $('<button type="button">Pass</button>')
+				.attr('id', 'passButton')
+				.click(function(){
+					fire_pass();
+				});
+			$('.bottom').append($confirm);
+			$('.bottom').append($pass);
+		} else {
+			$("#confirmButton").remove();
+			$("#passButton").remove();
+		} 
+	}
+
+	function disableButtons(){
+		$("#confirmButton").remove();
+		$("#confirmButton").remove();
+		$("#confirmButton").remove();
+		$("#passButton").remove();
+	}	
 
 	function switchPlayer(curr){
 		switch(curr){

@@ -91,7 +91,7 @@ function longpoll(){
 
 function longpoll_master(){
 	/* -------------------------------------------------*/ printToLog("MASTER: longpoll_master called");
-	global $current, $instance, $roomid;
+	global $current, $instance, $roomid, $db;
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Resetting variables");
 	// Save the beginning time of the Master poll & reset the session hand
@@ -137,7 +137,6 @@ function longpoll_master(){
 			$current = 'north';
 			break;
 	}
-	$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 	$q = $db -> prepare("UPDATE game SET turn = ? WHERE roomid = ?");
 	$q->execute(array($current, $roomid));
 
