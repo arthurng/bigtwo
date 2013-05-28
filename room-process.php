@@ -55,6 +55,13 @@
 		// Find out who holds diamond 3
 		if($hand[($cardNum/4-1)] == '1'){
 			// Translate player id to player name
+			// Bug fix
+			if($playerid == 0) {
+				$playerid = 3;
+			}
+			else {
+				$playerid = $playerid - 1;
+			}
 			$player = id2player($playerid);
 			$q = $db -> prepare("UPDATE game SET turn = ? WHERE roomid = ?");
 			$q->execute(array($player,$roomid));
