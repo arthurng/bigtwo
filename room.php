@@ -234,6 +234,9 @@
 			// Store playerid
 			playerid = playerId;
 			updateSeats();
+			setTimeout(function(){
+				window.location.reload();
+			}, 5000);
 		});
 		return false;
 	}
@@ -538,7 +541,6 @@
 			console.log(e);
 			removeHighlight();
 			getCurrentPlayer();
-			//currentPlayer = switchPlayer(currentPlayer);
 			updateCards(e["hand"]);
 			addHighlight();
 			console.log("---Timeout 2 seconds to for propagation")
@@ -576,15 +578,6 @@
 		$("#confirmButton").remove();
 		$("#passButton").remove();
 	}	
-
-	function switchPlayer(curr){
-		switch(curr){
-			case "north":	return "east";
-			case "east":	return "south";
-			case "south":	return "west";
-			case "west":	return "north";
-		}
-	}
 
 	</script>
 </html>
