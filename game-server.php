@@ -1,17 +1,14 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-/* -------------------------------------------------*/ printToLog("arrived");
+/* -------------------------------------------------*/ printToLog("Called game-server");
 // include the hand-logic
 require 'hand-logic.php';
 // hand roomid player
+$db = new PDO('mysql:host=ec2-54-251-38-11.ap-southeast-1.compute.amazonaws.com;dbname=bigtwo', "bigtwoadmin", "csci4140");
 $roomid = $_REQUEST['roomid'];
-$roomSessId = 'GAMESESSION'.$roomid;
-session_name($roomSessId);
-setSession("ready", 0);
 
 // get the current user
-$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 $q = $db -> prepare("SELECT turn FROM game WHERE roomid = ?");
 $q->execute(array($roomid));
 $r = $q->fetch();
@@ -55,12 +52,12 @@ function checking(){
 
 	// Handle two cases for validity
 	if ($validity){
-		setSession("done", 1);
-		setSession("hand", $_REQUEST["hand"]);
+		setFlag("done", 1);
+		setFlag("hand", $_REQUEST["hand"]);
 		/* -------------------------------------------------*/ printToLog("returning true to call");
 		return 'true';
 	} else {
-		setSession("hand", null);
+		setFlag("hand", null);
 		/* -------------------------------------------------*/ printToLog("returning false to call");
 		return 'false';
 	}
@@ -75,7 +72,7 @@ function pass(){
 	$newHand = "PASS";
 	saveNewHand($r, $newHand);
 
-	setSession("done", 1);
+	setFlag("done", 1);
 	return 'true';
 }
 
@@ -88,8 +85,6 @@ function longpoll(){
 	}
 	else {	
 		$temp = longpoll_slave();
-		//error_log("The slave call has been return to the main");
-		//error_log(print_r($temp, 1));
 		return $temp;
 	}
 }
@@ -100,18 +95,18 @@ function longpoll_master(){
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Resetting variables");
 	// Save the beginning time of the Master poll & reset the session hand
-	$TOflag = 0;
 	$startTime = time();
 	$curtime = 0;
-	setSession("timer", $startTime);
-	setSession("hand", null);
-	setSession("done", 0);
-	setSession("ready", 1);
+	setFlag("timer", $startTime);
+	setFlag("hand", null);
+	setFlag("done", 0);
+	setFlag("ready", 1);
+	error_log("-------The ready flag is now 1");
 	$increment = 0;
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Start loop to wait for TO or done");
 	// Loop to check the 'done' parameter (TOflag = Timeout flag)
-	error_log("Ready Session = ".getSession("ready"));
+	error_log("Ready Session = ".getFlag("ready"));
 	do {
 		usleep(100000);
 		clearstatcache();
@@ -123,9 +118,8 @@ function longpoll_master(){
 		}
 		//testing flag -- display in error log
 
-		if ($startTime+5 <= time()) $TOflag = 1;
-		if ($TOflag) setSession("done", 1);
-		$e = getSession("done");
+		if ($startTime+5 <= time()) setFlag("done", 1);
+		$e = getFlag("done");
 	} while ($e != 1) ;
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Loop ended, update current user and preparing to end");
@@ -148,8 +142,9 @@ function longpoll_master(){
 	$q->execute(array($current, $roomid));
 
 	// Read the session hand before return
-	$returnHand = getSession("hand");
-	setSession("ready", 0);
+	$returnHand = getFlag("hand");
+	setFlag("ready", 0);
+	error_log("-------The ready flag is now 0");
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Close connection and return hand");
 	/* -------------------------------------------------*/ // printToLog(print_r($returnHand, 1));
@@ -159,15 +154,13 @@ function longpoll_master(){
 function longpoll_slave(){
 	/* -------------------------------------------------*/ printToLog("SLAVE: longpoll_slave called");
 	global $current, $instance, $roomid;
-	$roomSessId = 'GAMESESSION'.$roomid;
-	session_name($roomSessId);
 	
 	/* -------------------------------------------------*/ printToLog("SLAVE: Loop to wait for the ready flag");
 	do {
 		error_log("loop 1 of instance: ".$instance);
 		usleep(200000);
 		clearstatcache();		
-		$e = getSession("ready");
+		$e = getFlag("ready");
 	} while ($e != 1);
 
 	/* -------------------------------------------------*/ printToLog("SLAVE: Start loop to wait for done: READY= 1");
@@ -175,29 +168,56 @@ function longpoll_slave(){
 		error_log("loop 2 of instance: ".$instance);		
 		usleep(100000);
 		clearstatcache();
-		$e = getSession("done");
+		$e = getFlag("done");
 	} while ($e != 1) ;
 
 	/* -------------------------------------------------*/ printToLog("SLAVE: Loop ended, preparing to end");
 	// Read the session hand before return
-	$returnHand = getSession("hand");
+	$returnHand = getFlag("hand");
 
 	/* -------------------------------------------------*/ printToLog("SLAVE: Close connection and return hand");
 	// return 'true';
 	return array('status' => 'slaved', 'hand' => $returnHand);	
 }
 
-function getSession($name){
-	session_start();
-	$s = $_SESSION[$name];
-	session_write_close();
-	return $s;
+function getFlag($name){
+	global $roomid, $db;
+	switch ($name){
+		case "ready":
+			$q = $db -> prepare("SELECT ready FROM session WHERE roomid = ?");
+			break;
+		case "timer";
+			$q = $db -> prepare("SELECT timer FROM session WHERE roomid = ?");
+			break;
+		case "hand";
+			$q = $db -> prepare("SELECT hand FROM session WHERE roomid = ?");
+			break;
+		case "done";
+			$q = $db -> prepare("SELECT done FROM session WHERE roomid = ?");
+			break;
+	}
+	$q->execute(array($roomid));
+	$r = $q->fetch();
+	return $r[0];
 }
 
-function setSession($name, $value){
-	session_start();
-	$_SESSION[$name] = $value;
-	session_write_close();
+function setFlag($name, $value){
+	global $roomid, $db;
+	switch ($name){
+		case "ready":
+			$q = $db -> prepare("UPDATE session SET ready = ? WHERE roomid = ?");
+			break;
+		case "timer";
+			$q = $db -> prepare("UPDATE session SET timer = ? WHERE roomid = ?");
+			break;
+		case "hand";
+			$q = $db -> prepare("UPDATE session SET hand = ? WHERE roomid = ?");
+			break;
+		case "done";
+			$q = $db -> prepare("UPDATE session SET done = ? WHERE roomid = ?");
+			break;
+	}
+	$q->execute(array($value, $roomid));
 	return true;
 }
 

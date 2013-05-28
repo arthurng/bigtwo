@@ -218,6 +218,8 @@ include("hand-logic.php");
 		if($r == null){
 			$q = $db -> prepare("INSERT INTO game (sessionid,roomid,cardnorth,cardeast,cardsouth,cardwest) VALUES(?,?,?,?,?,?)");
 			$q->execute(array($session,$roomid,'0','0','0','0'));
+			$q = $db -> prepare("INSERT INTO session (roomid, timer, hand, done, ready) VALUES(?,?,?,?,?)");
+			$q->execute(array($roomid,'0','0','0','0'));			
 		}
 		return true;
 	}

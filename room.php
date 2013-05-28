@@ -577,7 +577,10 @@
 			currentPlayer = switchPlayer(currentPlayer);
 			updateCards(e["hand"]);
 			addHighlight();
-			fire_longpoll();
+			setTimeout(function(){
+				console.log("Everything should have finished, now starting another longpoll now.")
+				fire_longpoll();
+			},2000);
 		});
 	}
 
