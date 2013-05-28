@@ -150,7 +150,8 @@
 			url: "room-process.php",
 			type: 'POST',
 			data: data 
-		}).done(function(deck){		
+		}).done(function(deck){
+			getCurrentPlayer();	
 			// Error handling
 			if(typeof deck != 'object'){
 				// When there is an empty seat
@@ -170,7 +171,7 @@
 			var show = deck;
 			// Get index
 			index = playerid;
-			
+
 			// Redraw player UI
 			spectatorGUI();
 			playerGUI(playerid, 'READY');
@@ -183,15 +184,6 @@
 			}
 			
 			fire_longpoll();
-
-
-			// Check game End
-			/*
-			checkEnd = setInterval(function(){
-				checkGameEnd();
-			}
-			, 2000);
-			*/
 		});
 		return false;
 	}
@@ -467,14 +459,14 @@
 		if(cards) {
 			var array_cards = cards.split(",");
 			for (ind in array_cards){
-				$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter');
+				$(".card"+array_cards[ind]).removeClass('cards').addClass('cardsCenter').click();
 			}
 		}
 	}
 
 	function fire_checking(){
 		joinedHand = hand.join(',');
-		player = id2player(index);
+		//player = id2player(index);
 		$.ajax({
 			url: "game-server.php",
 			type: 'POST',
@@ -494,7 +486,7 @@
 	}
 
 	function fire_pass(){
-		player = id2player(index);
+		//player = id2player(index);
 		$.ajax({
 			url: "game-server.php",
 			type: 'POST',
@@ -523,11 +515,16 @@
 				player: myPosition
 			}
 		}).always(function(e){
+			if (e["ended"] == 1) {
+				endGame('<?php echo $roomid; ?>');
+				return;
+			}
 			disableButtons();
 			console.log("longpoll " + myPosition + " -> terminated");
 			console.log(e);
 			removeHighlight();
-			currentPlayer = switchPlayer(currentPlayer);
+			getCurrentPlayer();
+			//currentPlayer = switchPlayer(currentPlayer);
 			updateCards(e["hand"]);
 			addHighlight();
 			console.log("---Timeout 2 seconds to for propagation")

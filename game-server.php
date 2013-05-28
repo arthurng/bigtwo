@@ -118,7 +118,7 @@ function longpoll_master(){
 		}
 		//testing flag -- display in error log
 
-		if ($startTime+5 <= time()) setFlag("done", 1);
+		if ($startTime+20 <= time()) pass();
 		$e = getFlag("done");
 	} while ($e != 1) ;
 
@@ -142,12 +142,13 @@ function longpoll_master(){
 
 	// Read the session hand before return
 	$returnHand = getFlag("hand");
+	$gameEnded = checkGameEnd();
 	setFlag("ready", 0);
 	error_log("-------The ready flag is now 0");
 
 	/* -------------------------------------------------*/ printToLog("MASTER: Close connection and return hand");
 	/* -------------------------------------------------*/ // printToLog(print_r($returnHand, 1));
-	return array('status' => 'mastered', 'hand' => $returnHand);	
+	return array('status' => 'mastered', 'hand' => $returnHand, 'ended' => $gameEnded);	
 }
 
 function longpoll_slave(){
@@ -173,10 +174,10 @@ function longpoll_slave(){
 	/* -------------------------------------------------*/ printToLog("SLAVE: Loop ended, preparing to end");
 	// Read the session hand before return
 	$returnHand = getFlag("hand");
-
+	$gameEnded = checkGameEnd();
 	/* -------------------------------------------------*/ printToLog("SLAVE: Close connection and return hand");
 	// return 'true';
-	return array('status' => 'slaved', 'hand' => $returnHand);	
+	return array('status' => 'slaved', 'hand' => $returnHand, 'ended' => $gameEnded);	
 }
 
 function getFlag($name){
@@ -218,6 +219,19 @@ function setFlag($name, $value){
 	}
 	$q->execute(array($value, $roomid));
 	return true;
+}
+
+// Check whether the game is ended
+function checkGameEnd(){
+	global $roomid, $db;
+	$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
+	$q->execute(array($roomid));
+	$r = $q->fetch();
+	// When one of the players played all cards
+	if($r['cardnorth'] == null || $r['cardeast'] == null || $r['cardsouth'] == null || $r['cardwest'] == null){
+		return '1';
+	}
+	return '0';
 }
 
 header('Content-Type: application/json');

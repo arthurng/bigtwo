@@ -164,21 +164,7 @@
 		return $player;
 	}
 	
-	// Check whether the game is ended
-	function checkGameEnd(){
-		$roomid = (int)$_POST['roomid'];
-		if($roomid < 0){ throw new Exception('Invalid player');}
-		global $db;
-		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ? LIMIT 1");
-		$q->execute(array($roomid));
-		$r = $q->fetch();
-		
-		// When one of the players played all cards
-		if($r['cardnorth'] == null || $r['cardeast'] == null || $r['cardsouth'] == null || $r['cardwest'] == null){
-			return true;
-		}
-		return false;
-	}
+	// The check game end moved to game-server
 	
 	// Get current game session for debugging
 	function getSession(){

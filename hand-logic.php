@@ -141,7 +141,7 @@ function fiveCard($cards){
 	$currentHand = null;
 	
 	//1. Check if previous hand consist of 5 cards
-	if ($prevHand[0] < 4 &&  $prevHand[0] > 8 && $prevHand[0] != "PASS") return false;
+	if (($prevHand[0] < 4 || $prevHand[0] > 8) && $prevHand[0] != "PASS") return false;
 	
 	// 2. Validate and calculate the current hand	
 		// 2.4 For Straight Flush Case

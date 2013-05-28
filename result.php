@@ -138,6 +138,7 @@
 <script type="text/javascript" src="result.js"></script>
 <script type="text/javascript">
 	roomid = parent.passUserid();
+	console.log("called getResult");
 	getResults(roomid);
 </script>
 </html>	

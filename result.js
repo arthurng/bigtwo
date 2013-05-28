@@ -4,7 +4,7 @@ function getResults(roomid){
 		type: "POST",
 		data: {action: "getResults", roomid: roomid}
 	}).done(function(e){
-		//for (var i in e){c(e[i]);}
+		for (var i in e){c(e[i]);}
 		updateDisplay(e);
 	});
 }

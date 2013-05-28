@@ -1,5 +1,8 @@
 <?php
+	$r = 0;
+
 	function getResults(){
+		global $r;
 		$db = new PDO('mysql:host=www.shop151.ierg4210.org;dbname=bigtwo', "bigtwoadmin", "csci4140");
 		$q = $db -> prepare("SELECT * FROM game WHERE roomid = ?");
 		$q->execute(array($_REQUEST["roomid"]));
@@ -28,6 +31,25 @@
 				$rank[$p++] = $t;
 			}
 		}
+
+		for ($x=1; $x<4; $x++){
+			if (count($rank[$x])>1){
+				usort($rank[$x], "cmpMax");
+			}
+		}
+
+		for ($x=1; $x<4; $x++){
+			if (count($rank[$x])>1){
+				foreach(array_reverse($rank[$x]) as $i){
+					if ($rank[$x+1] == null) $rank[$x+1] = [];
+					array_push($rank[4], $i);
+					array_pop($rank[$x]);
+					if (count($rank[$x])==1) break; 
+				}
+			}
+		}
+
+		error_log(print_r($rank,1));
 
 		$scoreScale = array(0, 500, 250, 100, 0);
 		$response = array(
@@ -84,6 +106,17 @@
 		$r = $q->fetchAll(PDO::FETCH_CLASS);
 		return $r;
 	}
+
+
+	function cmpMax($a, $b){
+		global $r;
+		//error_log(max(explode(",", $r["card".$a])));
+		//error_log(max(explode(",", $r["card".$b])));
+		if (max(explode(",", $r["card".$a])) > max(explode(",", $r["card".$b])))
+			return 1;
+		else return -1;
+	}
+
 
 	function getUserid(){
 		// Get user id from facebook cookie
