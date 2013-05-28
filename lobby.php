@@ -40,6 +40,8 @@
 		refreshQueue();
 		if ($("#queue").children(".userBox").length == 4){
 			var hashedName = hashCode(currentRoom);
+			if (hashedName == 90) hashedName = 1;
+			if (hashedName == 65) hashedName = 2;
 			setTimeout(function(){
 				$.ajax({
 					url: "room-process.php",
